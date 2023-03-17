@@ -15,6 +15,11 @@ mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
+//routes
+const authRouter = require("./routes/auth.router.js");
+
+app.use("/api/auth", authRouter);
+
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });

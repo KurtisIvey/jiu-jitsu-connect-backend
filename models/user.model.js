@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  friends: [{ type: ObjectId, ref: "User" }],
+  /* friends will be added later through friend requests 
+  friends: [{ type: ObjectId, ref: "User" }],*/
 });
 
 userSchema.pre("save", async function (next) {
