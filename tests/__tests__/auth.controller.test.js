@@ -24,7 +24,7 @@ describe("should confirm that auth router is connected and functioning at basic 
       });
   });
 });
-/* describe("User", () => {
+describe("User", () => {
   describe("POST /api/auth/register", () => {
     test("controller should be able to create a new user and encrypt password", async () => {
       const body = {
@@ -87,7 +87,7 @@ describe("should confirm that auth router is connected and functioning at basic 
           email: "testgd@gmail.com",
         })
         .expect("Content-Type", /json/)
-        .expect(400, done);
+        .expect(422, done);
     });
   });
   describe("POST /api/auth/login", () => {
@@ -95,7 +95,7 @@ describe("should confirm that auth router is connected and functioning at basic 
       // previous registration established the login info needed
       request(app)
         .post("/api/auth/login")
-        .send({ email: "test2@gmail.com", password: "password123" })
+        .send({ email: "test@gmail.com", password: "password123" })
         .expect("Content-Type", /json/)
         //.expect({ status: "ok", message: "successful creation" })
         .expect(200, done);
@@ -120,7 +120,7 @@ describe("should confirm that auth router is connected and functioning at basic 
       // previous registration established the login info needed
       request(app)
         .post("/api/auth/login")
-        .send({  password: "password123" })
+        .send({ password: "password123" })
         .expect("Content-Type", /json/)
         .expect(400, done);
     });
@@ -133,4 +133,4 @@ describe("should confirm that auth router is connected and functioning at basic 
         .expect(400, done);
     });
   });
-}); */
+});

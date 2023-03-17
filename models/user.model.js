@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 /* posts will be referenced through userId and found using query for individ page
  */
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
     lowercase: true,
     required: true,
