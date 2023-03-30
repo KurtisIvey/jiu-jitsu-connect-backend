@@ -29,6 +29,9 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 //routes
 const authRouter = require("./routes/auth.router.js");
 
+app.get("/", (req, res) => {
+  res.send("deployed! :D");
+});
 app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
