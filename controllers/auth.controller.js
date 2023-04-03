@@ -33,6 +33,7 @@ exports.login__post = [
   body("email").trim().isEmail().normalizeEmail(),
   body("password").trim().escape(),
   async (req, res) => {
+    console.log(req.body);
     const errors = validationResult(req);
 
     const email = req.body.email;
@@ -50,7 +51,21 @@ exports.login__post = [
         { expiresIn: 60 * 60 * 3 }
       );
       // heroku eco plan doesn't allow me to set cookies, so jwt stored via local storage and passed via client header
-      return res.status(200).json({
+      return res
+        .cookie("access_token", token, {
+          sameSite: "none",
+          secure: true,
+          httpOnly: true,
+        })
+        .status(200)
+        .json({ message: "Logged in successfully 😊 👌" });
+      /* return res.status(200).cookie("secureCookie", token, {
+        sameSite: "none",
+        secure: true,
+        httpOnly: true,
+      }); */
+
+      /* return res.status(200).json({
         status: "ok",
         token,
         user: {
@@ -58,8 +73,9 @@ exports.login__post = [
           email: user.email,
           _id: user._id,
         },
-      });
+      }); */
     } catch (err) {
+      console.log(err);
       const errors = userErrorHandler(err);
       return res.status(400).json({ status: "error", errors });
     }
