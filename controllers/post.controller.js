@@ -4,6 +4,7 @@ const Post = require("../models/post.model");
 // middleware must be destructured otherwise error occurs
 const { isLoggedIn } = require("../middleware/isLoggedIn");
 
+let regex = /<>\$\/\|\[\]~`/;
 /*
 // post schema setup 
 author: {
@@ -23,14 +24,12 @@ author: {
 
 exports.posts__post = [
   isLoggedIn,
-  body("postContent").trim().escape().notEmpty(),
+  body("postContent").trim().blacklist(regex).notEmpty(),
   async (req, res) => {
     try {
-      const token = req.headers.authorization;
-      const decoded = jwt.verify(token, process.env.SECRET);
       const post = new Post({
         postContent: req.body.postContent,
-        author: decoded._id,
+        author: req.user._id,
       });
       try {
         post.save();
@@ -45,35 +44,3 @@ exports.posts__post = [
     }
   },
 ];
-
-/* exports.post__post = [
-    isLoggedIn,
-    body("postContent").trim().escape().notEmpty(),
-    async (req, res) => {
-      const errors = validationResult(req);
-  
-      if (!errors.isEmpty()) {
-        res.status(422).json({ errors: errors.mapped() });
-        return;
-      }
-  
-      try {
-        const token = req.headers.authorization;
-        const decoded = jwt.verify(token, process.env.SECRET);
-        const post = new Post({
-          postContent: req.body.postContent,
-          author: decoded._id,
-        });
-        try {
-          post.save();
-          res
-            .status(201)
-            .json({ status: "ok", message: "post creation success" });
-        } catch (err) {
-          res.status(400).json({ status: "error", err });
-        }
-      } catch (err) {
-        res.json({ status: "error", error: err.message });
-      }
-    },
-  ]; */

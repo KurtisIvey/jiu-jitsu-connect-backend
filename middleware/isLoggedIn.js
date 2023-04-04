@@ -15,6 +15,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
         error: "unauthorized access",
       });
     }
+    // bind decoded jwt to req.user
     req.user = user;
     req.token = token;
     next();
