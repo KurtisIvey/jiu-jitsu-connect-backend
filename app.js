@@ -28,11 +28,13 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 //routes
 const authRouter = require("./routes/auth.router.js");
+const postRouter = require("./routes/post.router");
 
 app.get("/", (req, res) => {
   res.send("deployed! :D");
 });
 app.use("/api/auth", authRouter);
+app.use("/api/posts", postRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
