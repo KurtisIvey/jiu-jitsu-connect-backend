@@ -44,6 +44,7 @@ describe("Create Post", () => {
       .set("Authorization", token)
       .set("Accept", "application/json")
       .send({ postContent: "test post content" });
-    console.log(res.statusCode);
+    console.log(res.body);
+    expect(res.body.message).toEqual("post creation success");
   });
 });

@@ -7,7 +7,6 @@ module.exports.isLoggedIn = async (req, res, next) => {
     const token = req.headers.authorization;
     const decodedJwt = jwt.verify(token, process.env.SECRET);
     const user = await User.findOne({ _id: decodedJwt._id });
-    console.log("isloggedin middleware passing");
     // if user doesn't exist in db
     if (!user) {
       res.status(401).json({
