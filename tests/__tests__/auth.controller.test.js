@@ -1,16 +1,6 @@
 const request = require("supertest");
 const app = require("../appTest");
 const User = require("../../models/user.model");
-const {
-  connect,
-  cleanData,
-  disconnect,
-} = require("../testUtils/mongoConfigTesting");
-const bcrypt = require("bcrypt");
-
-beforeAll(async () => await connect());
-//beforeEach(async () => await cleanData());
-afterAll(async () => await disconnect());
 
 describe("should confirm that auth router is connected and functioning at basic most level", () => {
   test("Should confirm that auth router is connected", () => {
@@ -134,4 +124,3 @@ describe("User", () => {
     });
   });
 });
-

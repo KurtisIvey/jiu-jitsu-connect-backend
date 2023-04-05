@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
 const { MongoMemoryServer } = require("mongodb-memory-server");
 
-let mongoDb = MongoMemoryServer;
+async function initializeMongoServer() {
+  const mongoServer = await MongoMemoryServer.create();
+  const mongoUri = mongoServer.getUri();
 
-const connect = async () => {
-  mongoDb = await MongoMemoryServer.create();
-  const uri = mongoDb.getUri();  
-  mongoose.set('strictQuery', true);
-  await mongoose.connect(uri);
-};
+  mongoose.connect(mongoUri);
 
-const cleanData = async () => {
-};
+  mongoose.connection.on("error", (e) => {
+    if (e.message.code === "ETIMEDOUT") {
+      console.log(e);
+      mongoose.connect(mongoUri);
+    }
+    console.log(e);
+  });
 
-const disconnect = async () => {
-    //await mongoose.connection.db.dropDatabase();
+  mongoose.connection.once("open", () => {
+    // console.log(`MongoDB successfully connected to ${mongoUri}`);
+  });
+}
 
-  await mongoose.disconnect();
-  await mongoDb.stop();
-};
-
-module.exports = { connect, cleanData, disconnect };
+module.exports = initializeMongoServer;

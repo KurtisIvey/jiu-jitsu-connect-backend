@@ -1,7 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const initializeMongoServer = require("./testUtils/mongoConfigTesting");
 
+initializeMongoServer();
 // routes
 const authRouter = require("../routes/auth.router.js");
 const postRouter = require("../routes/post.router.js");
