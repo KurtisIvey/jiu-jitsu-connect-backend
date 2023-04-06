@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 /* posts will be referenced through userId and found using query for individ page
  */
 const userSchema = new mongoose.Schema({
+  //required
   username: {
     type: String,
     lowercase: true,
@@ -21,11 +22,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // added manually later
+  profile_pic_url: {
+    type: String,
+  },
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  friend_requests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   /* friends will be added later through friend requests 
   friends: [{ type: ObjectId, ref: "User" }],*/
 });
 
 userSchema.pre("save", async function (next) {
+  //console.log("presave catch" + this.password);
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
   next();

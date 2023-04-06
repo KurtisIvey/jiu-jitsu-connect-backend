@@ -22,10 +22,26 @@ author: {
   },
  */
 
+exports.postsAll__get = async (req, res) => {
+  try {
+    const posts = await Post.find({});
+    //console.log(posts);
+    return res.json({ posts });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 exports.posts__post = [
   isLoggedIn,
   body("postContent").trim().blacklist(regex).notEmpty(),
   async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.mapped() });
+      return;
+    }
     try {
       const post = new Post({
         postContent: req.body.postContent,
@@ -35,7 +51,7 @@ exports.posts__post = [
         post.save();
         res
           .status(201)
-          .json({ status: "ok", message: "post creation success" });
+          .json({ status: "ok", message: "post creation success", post });
       } catch (err) {
         res.status(400).json({ status: "error", err });
       }

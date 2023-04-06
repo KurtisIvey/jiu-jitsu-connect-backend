@@ -30,9 +30,15 @@ exports.register__post = [
 ];
 
 exports.login__post = [
-  body("email").trim().isEmail().normalizeEmail(),
-  body("password").trim().escape(),
+  body("email").trim().isEmail().notEmpty().normalizeEmail(),
+  body("password").trim().notEmpty().escape(),
   async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.mapped() });
+      return;
+    }
     //console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;

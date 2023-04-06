@@ -104,7 +104,7 @@ describe("User", () => {
         .post("/api/auth/login")
         .send({ email: "testgmail.com", password: "password123" })
         .expect("Content-Type", /json/)
-        .expect(400, done);
+        .expect(422, done);
     });
     test("should receive login error due to missing email credential", function (done) {
       // previous registration established the login info needed
@@ -112,7 +112,7 @@ describe("User", () => {
         .post("/api/auth/login")
         .send({ password: "password123" })
         .expect("Content-Type", /json/)
-        .expect(400, done);
+        .expect(422, done);
     });
     test("should receive login error due to missing password credential", function (done) {
       // previous registration established the login info needed
@@ -120,7 +120,7 @@ describe("User", () => {
         .post("/api/auth/login")
         .send({ email: "test@gmail.com" })
         .expect("Content-Type", /json/)
-        .expect(400, done);
+        .expect(422, done);
     });
   });
 });
