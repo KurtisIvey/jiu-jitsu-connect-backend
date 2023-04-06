@@ -24,11 +24,25 @@ author: {
 
 exports.postsAll__get = async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate("author").exec();
     //console.log(posts);
     return res.json({ posts });
   } catch (err) {
     console.log(err);
+  }
+};
+
+exports.specificPost__get = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate("author").exec();
+    //console.log(post);
+    if (post === null) {
+      res.status(404).json({ status: "error", error: "post does not exist" });
+    } else {
+      res.json({ post });
+    }
+  } catch (err) {
+    res.status(400).json({ status: "error", error: err });
   }
 };
 

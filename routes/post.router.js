@@ -8,6 +8,8 @@ router.get("/test", (req, res) => {
 
 //get posts
 router.get("/", postController.postsAll__get);
+router.get("/:id", postController.specificPost__get);
+
 router.post("/", postController.posts__post);
 /* router.post("/create-post", (req, res) => {
   res.send("hi");

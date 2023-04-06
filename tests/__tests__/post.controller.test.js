@@ -6,10 +6,14 @@ const User = require("../../models/user.model");
 const seedDb = require("../testUtils/seedDb");
 
 let token;
+// create var to tie a post produced from seedDb to wider scope for test because i need the
+// the ._id to call in specific post test. assigned in beforeAll because of ._id changes every time test is ran
+let specificPost;
 
 beforeAll(async () => {
+  // assign to obj so I can access when needed
   const obj = await seedDb();
-
+  specificPost = obj.testPosts[0];
   const body = {
     username: "test",
     email: "test@gmail.com",
@@ -23,21 +27,9 @@ beforeAll(async () => {
     .send({ email: "test@gmail.com", password: "password123" })
     .set("Accept", "application/json");
   token = res.body.token;
-  const allUsers = await User.find({});
-  console.log(allUsers);
+  //console.log(obj.testPosts);
+  //console.log(specificPost);
 });
-
-/*
-backup working beforeAll seed setup in case accidental editing occurs
-beforeAll(async () => {
-  seedDb();
-
-  const res = await request(app)
-    .post("/api/auth/login")
-    .send({ email: "test@gmail.com", password: "password123" })
-    .set("Accept", "application/json");
-  token = res.body.token;
-}); */
 
 describe("should confirm that post router is connected", () => {
   test("Should confirm the post json received", () => {
@@ -85,6 +77,24 @@ describe("Get Posts", () => {
       .set("Authorization", token)
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
+    // 15 posts created on seedDb, plus 1 through prev tests
+    expect(res.body.posts.length).toEqual(16);
+    expect(res.header["content-type"]).toEqual(expect.stringMatching(/json/));
+    expect(res.body).toHaveProperty("posts");
+
+    console.log(res.statusCode);
+  });
+});
+
+describe("Get Specific Posts", () => {
+  test("should retrieve specific post with proper objectId", async () => {
+    //specificPost is created and then defined in beforeAll
+    const res = await request(app)
+      .get(`/api/posts/${specificPost._id}`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty("post");
     console.log(res.body);
   });
 });
