@@ -61,6 +61,9 @@ exports.login__post = [
           username: user.username,
           email: user.email,
           _id: user._id,
+          profilePicUrl: user.profilePicUrl,
+          friends: user.friends,
+          friendRequests: user.friendRequests,
         },
       });
     } catch (err) {

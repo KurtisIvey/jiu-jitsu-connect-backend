@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   // added manually later
-  profile_pic_url: {
+  profilePicUrl: {
     type: String,
   },
   friends: [
@@ -32,12 +32,13 @@ const userSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
-  friend_requests: [
+  friendRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   ],
+
   /* friends will be added later through friend requests 
   friends: [{ type: ObjectId, ref: "User" }],*/
 });
