@@ -82,7 +82,7 @@ describe("Get Posts", () => {
     expect(res.header["content-type"]).toEqual(expect.stringMatching(/json/));
     expect(res.body).toHaveProperty("posts");
 
-    console.log(res.statusCode);
+    //console.log(res.statusCode);
   });
 });
 
@@ -95,6 +95,6 @@ describe("Get Specific Posts", () => {
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("post");
-    console.log(res.body);
+    //console.log(res.body);
   });
 });
