@@ -9,7 +9,6 @@ exports.specificUser = [
       const user = await User.findById(req.params.id, {
         _id: 1,
         username: 1,
-        email: 1,
         friends: 1,
         friendRequests: 1,
       });

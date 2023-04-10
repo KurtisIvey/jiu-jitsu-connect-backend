@@ -65,5 +65,6 @@ describe("should fetch info from specific user with id", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("user");
     expect(res.body.user).not.toHaveProperty("password");
+    expect(res.body.user).not.toHaveProperty("email");
   });
 });
