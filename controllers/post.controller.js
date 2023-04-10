@@ -32,6 +32,17 @@ exports.postsAll__get = async (req, res) => {
   }
 };
 
+exports.postsByUser__get = async (req, res) => {
+  try {
+    const posts = await Post.find({ author: req.params.id })
+      .populate("author")
+      .exec();
+    return res.json({ posts });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 exports.specificPost__get = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id).populate("author").exec();

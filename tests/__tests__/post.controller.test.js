@@ -9,6 +9,7 @@ let token;
 // create var to tie a post produced from seedDb to wider scope for test because i need the
 // the ._id to call in specific post test. assigned in beforeAll because of ._id changes every time test is ran
 let specificPost;
+let specificUser;
 
 beforeAll(async () => {
   // assign to obj so I can access when needed
@@ -21,6 +22,7 @@ beforeAll(async () => {
   };
   const newUser = await User(body);
   await newUser.save();
+  specificUser = newUser;
 
   const res = await request(app)
     .post("/api/auth/login")
@@ -29,6 +31,7 @@ beforeAll(async () => {
   token = res.body.token;
   //console.log(obj.testPosts);
   //console.log(specificPost);
+  console.log(specificUser);
 });
 
 describe("should confirm that post router is connected", () => {
@@ -83,6 +86,15 @@ describe("Get Posts", () => {
     expect(res.body).toHaveProperty("posts");
 
     //console.log(res.statusCode);
+  });
+});
+
+describe("Get posts by User", () => {
+  test("should return posts specified by UserId", async () => {
+    const res = await request(app).get(
+      `/api/posts/byUserId/${specificUser._id}`
+    );
+    console.log(res.body);
   });
 });
 

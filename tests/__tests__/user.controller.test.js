@@ -25,7 +25,7 @@ beforeAll(async () => {
     .send({ email: "test@gmail.com", password: "password123" })
     .set("Accept", "application/json");
   token = res.body.token;
-  console.log(specificUser);
+  //console.log(specificUser);
 });
 
 describe("should confirm that post router is connected", () => {
