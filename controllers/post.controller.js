@@ -22,26 +22,36 @@ author: {
   },
  */
 
-exports.postsAll__get = async (req, res) => {
-  try {
-    const posts = await Post.find({}).populate("author").exec();
-    //console.log(posts);
-    return res.json({ posts });
-  } catch (err) {
-    console.log(err);
-  }
-};
+exports.postsAll__get = [
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const posts = await Post.find({}).populate("author").exec();
+      //console.log(posts);
+      return res.json({ posts });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+];
 
-exports.postsByUser__get = async (req, res) => {
-  try {
-    const posts = await Post.find({ author: req.params.id })
-      .populate("author")
-      .exec();
-    return res.json({ posts });
-  } catch (err) {
-    console.log(err);
-  }
-};
+exports.postsByUser__get = [
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const posts = await Post.find({ author: req.params.id })
+        .populate("author")
+        .exec();
+      if (posts.length >= 1) {
+        return res.json({ posts });
+      } else {
+        return res.json({ posts: [] });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  },
+];
 
 exports.specificPost__get = async (req, res) => {
   try {

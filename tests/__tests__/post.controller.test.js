@@ -10,17 +10,18 @@ let token;
 // the ._id to call in specific post test. assigned in beforeAll because of ._id changes every time test is ran
 let specificPost;
 let specificUser;
+let nonPostingUser;
 
 beforeAll(async () => {
   // assign to obj so I can access when needed
   const obj = await seedDb();
   specificPost = obj.testPosts[0];
-  const body = {
+
+  const newUser = await User({
     username: "test",
     email: "test@gmail.com",
     password: "password123",
-  };
-  const newUser = await User(body);
+  });
   await newUser.save();
   specificUser = newUser;
 
@@ -31,7 +32,7 @@ beforeAll(async () => {
   token = res.body.token;
   //console.log(obj.testPosts);
   //console.log(specificPost);
-  console.log(specificUser);
+  //console.log(specificUser);
 });
 
 describe("should confirm that post router is connected", () => {
@@ -91,10 +92,36 @@ describe("Get Posts", () => {
 
 describe("Get posts by User", () => {
   test("should return posts specified by UserId", async () => {
-    const res = await request(app).get(
-      `/api/posts/byUserId/${specificUser._id}`
-    );
-    console.log(res.body);
+    // create another post from user
+    const sres = await request(app)
+      .post("/api/posts")
+      .set("Authorization", token)
+      .set("Accept", "application/json")
+      .send({ postContent: "test post content" });
+
+    const res = await request(app)
+      .get(`/api/posts/byUserId/${specificUser._id}`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.posts.length).toEqual(2);
+  });
+  test("should return empty arr if the user hasn't made any posts", async () => {
+    // create new user that has no posts created under it
+    const newUser2 = await User({
+      username: "test2",
+      email: "test2@gmail.com",
+      password: "password123",
+    });
+    await newUser2.save();
+    nonPostingUser = newUser2;
+
+    const res = await request(app)
+      .get(`/api/posts/byUserId/${nonPostingUser._id}`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.posts.length).toEqual(0);
   });
 });
 
