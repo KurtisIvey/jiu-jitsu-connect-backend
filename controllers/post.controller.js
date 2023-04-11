@@ -26,7 +26,10 @@ exports.postsAll__get = [
   isLoggedIn,
   async (req, res) => {
     try {
-      const posts = await Post.find({}).populate("author").exec();
+      const posts = await Post.find({})
+        .sort({ timestamp: -1 })
+        .populate("author")
+        .exec();
       //console.log(posts);
       return res.json({ posts });
     } catch (err) {
@@ -40,6 +43,7 @@ exports.postsByUser__get = [
   async (req, res) => {
     try {
       const posts = await Post.find({ author: req.params.id })
+        .sort({ timestamp: -1 })
         .populate("author")
         .exec();
       if (posts.length >= 1) {
