@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
   // added manually later
   profilePicUrl: {
     type: String,
+    trim: true,
   },
   friends: [
     {

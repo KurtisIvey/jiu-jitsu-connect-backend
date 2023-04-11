@@ -11,6 +11,7 @@ exports.specificUser = [
         username: 1,
         friends: 1,
         friendRequests: 1,
+        profilePicUrl: 1,
       });
       if (user === null) {
         res.status(404).json({ status: "error", error: "unable to find user" });
