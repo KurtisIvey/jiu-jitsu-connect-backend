@@ -81,27 +81,18 @@ exports.like__put = [
       if (post === null) {
         res.status(404).json({ status: "error", error: "post does not exist" });
       } else {
-        //res.json({ post });
         if (post.likes.includes(userId)) {
-          console.log("trying to remove");
           post.likes.pull(userId);
           await post.save();
-          /* postLikeArr = [...post.likes];
-          filteredPostLikeArr = postLikeArr.filter(
-            (userId) => userId !== req.user._id
-          );
-          post.likes = filteredPostLikeArr;
-          const updatedPost = await post.save(); */
           return res
             .status(201)
             .json({ status: "success", message: "post unliked" });
         }
         post.likes.push(userId);
-        const newlyLikedPost = await post.save();
+        await post.save();
         return res.status(201).json({
           status: "success",
           message: "post liked",
-          post: newlyLikedPost,
         });
       }
     } catch (err) {
