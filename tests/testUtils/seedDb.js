@@ -77,13 +77,6 @@ const seedDb = async () => {
       console.log("err trying to save test user," + err);
     }
   });
-  /* for(testPost of testPosts){
-    try {
-        await testUser.save();
-      } catch (err) {
-        console.log("err trying to save test user," + err);
-      }
-  } */
 
   //console.log(testPosts);
   //console.log(testUsers);

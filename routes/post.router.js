@@ -11,9 +11,9 @@ router.get("/", postController.postsAll__get);
 router.get("/:id", postController.specificPost__get);
 router.get("/byUserId/:id", postController.postsByUser__get);
 router.post("/", postController.posts__post);
-/* router.post("/create-post", (req, res) => {
-  res.send("hi");
-}); */
+
+router.put("/:id/like", postController.like__put);
+
 //login
 
 module.exports = router;

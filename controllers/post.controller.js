@@ -71,6 +71,45 @@ exports.specificPost__get = async (req, res) => {
   }
 };
 
+exports.like__put = [
+  isLoggedIn,
+  async (req, res) => {
+    const userId = req.user.id;
+    try {
+      const post = await Post.findById(req.params.id).populate("author").exec();
+      //console.log(post);
+      if (post === null) {
+        res.status(404).json({ status: "error", error: "post does not exist" });
+      } else {
+        //res.json({ post });
+        if (post.likes.includes(userId)) {
+          console.log("trying to remove");
+          post.likes.pull(userId);
+          await post.save();
+          /* postLikeArr = [...post.likes];
+          filteredPostLikeArr = postLikeArr.filter(
+            (userId) => userId !== req.user._id
+          );
+          post.likes = filteredPostLikeArr;
+          const updatedPost = await post.save(); */
+          return res
+            .status(201)
+            .json({ status: "success", message: "post unliked" });
+        }
+        post.likes.push(userId);
+        const newlyLikedPost = await post.save();
+        return res.status(201).json({
+          status: "success",
+          message: "post liked",
+          post: newlyLikedPost,
+        });
+      }
+    } catch (err) {
+      res.status(400).json({ status: "error", error: err });
+    }
+  },
+];
+
 exports.posts__post = [
   isLoggedIn,
   body("postContent").trim().blacklist(regex).notEmpty(),

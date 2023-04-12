@@ -137,3 +137,15 @@ describe("Get Specific Posts", () => {
     //console.log(res.body);
   });
 });
+
+describe("Like Post", () => {
+  test("should like post and add userId to posts like array property in db.", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${specificPost._id}/like`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    console.log(res.body);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body.message).toEqual("post liked");
+  });
+});

@@ -52,7 +52,7 @@ exports.login__post = [
         },
         process.env.SECRET,
         // 3 hour expire
-        { expiresIn: 60 * 60 * 3 }
+        { expiresIn: 60 * 60 * 60 }
       );
       return res.status(200).json({
         status: "ok",
