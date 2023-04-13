@@ -60,8 +60,17 @@ exports.postsByUser__get = [
 
 exports.specificPost__get = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id).populate("author").exec();
-    //console.log(post);
+    const post = await Post.findById(req.params.id).populate({
+      path: "comments",
+
+      populate: {
+        path: "author",
+        model: "User",
+      },
+      options: {
+        sort: { timestamp: -1 },
+      },
+    }); //console.log(post);
     if (post === null) {
       res.status(404).json({ status: "error", error: "post does not exist" });
     } else {
