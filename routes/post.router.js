@@ -14,6 +14,7 @@ router.post("/", postController.posts__post);
 
 router.put("/:id/like", postController.like__put);
 
+router.put("/:id/comment", postController.postComment__put);
 //login
 
 module.exports = router;

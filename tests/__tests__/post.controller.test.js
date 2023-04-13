@@ -138,6 +138,34 @@ describe("Get Specific Posts", () => {
   });
 });
 
+describe("Comment Post", () => {
+  test("should comment on post ", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${specificPost._id}/comment`)
+      .set("Authorization", token)
+      .set("Accept", "application/json")
+      .send({ commentContent: "test comment" });
+
+    expect(res.statusCode).toEqual(201);
+    expect(res.body.message).toEqual("post commented");
+    expect(res.body.comment.commentContent).toEqual("test comment");
+  });
+  test("should NOT comment on post w/o token ", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${specificPost._id}/comment`)
+      .set("Accept", "application/json")
+      .send({ commentContent: "test comment" });
+    expect(res.statusCode).toEqual(401);
+  });
+  test("should NOT comment on post w/o comment field filled in ", async () => {
+    const res = await request(app)
+      .put(`/api/posts/${specificPost._id}/comment`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    expect(res.statusCode).toEqual(422);
+  });
+});
+
 describe("Like Post", () => {
   test("should like post ", async () => {
     const res = await request(app)

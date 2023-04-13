@@ -19,7 +19,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
     req.token = token;
     next();
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(401).json({
       status: "error",
       error: "unauthorized access",

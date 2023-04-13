@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const Post = require("../models/post.model");
+const Comment = require("../models/comment.model");
 // middleware must be destructured otherwise error occurs
 const { isLoggedIn } = require("../middleware/isLoggedIn");
 
@@ -76,7 +77,7 @@ exports.like__put = [
   async (req, res) => {
     const userId = req.user.id;
     try {
-      const post = await Post.findById(req.params.id).populate("author").exec();
+      const post = await Post.findById(req.params.id);
       //console.log(post);
       if (post === null) {
         res.status(404).json({ status: "error", error: "post does not exist" });
@@ -95,6 +96,44 @@ exports.like__put = [
           message: "post liked",
         });
       }
+    } catch (err) {
+      res.status(400).json({ status: "error", error: err });
+    }
+  },
+];
+
+exports.postComment__put = [
+  isLoggedIn,
+  body("commentContent").trim().blacklist(regex).notEmpty(),
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.mapped() });
+      return;
+    }
+    try {
+      const post = await Post.findById(req.params.id);
+      if (post === null) {
+        res.status(404).json({ status: "error", error: "post does not exist" });
+      } else {
+        const comment = new Comment({
+          author: req.user._id,
+          commentContent: req.body.commentContent,
+        });
+
+        comment.save();
+        post.comments.push(comment);
+        await post.save();
+
+        return res.status(201).json({
+          status: "success",
+          message: "post commented",
+          comment,
+        });
+      }
+
+      //console.log(post);
     } catch (err) {
       res.status(400).json({ status: "error", error: err });
     }
