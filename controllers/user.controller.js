@@ -23,3 +23,57 @@ exports.specificUser = [
     }
   },
 ];
+
+exports.sendFriendRequest__put = [
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const currentUser = req.user._id;
+
+      const userToBefriend = await User.findById(req.params.id);
+      if (userToBefriend === null) {
+        res.status(404).json({ status: "error", error: "user does not exist" });
+      }
+      if (userToBefriend._id === currentUser) {
+        res.status(400).json({ status: "error", error: "already friends" });
+      } else {
+        userToBefriend.friendRequests.push(currentUser);
+        await userToBefriend.save();
+        return res.status(201).json({
+          status: "success",
+          message: "friendship requested",
+          userToBefriend,
+        });
+      }
+    } catch (err) {
+      res.status(400).json({ status: "error", error: err });
+    }
+  },
+];
+
+exports.FriendRequest__delete = [
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const currentUser = req.user._id;
+
+      const userToBefriend = await User.findById(req.params.id);
+      if (userToBefriend === null) {
+        res.status(404).json({ status: "error", error: "user does not exist" });
+      }
+      if (userToBefriend._id === currentUser) {
+        res.status(400).json({ status: "error", error: "already friends" });
+      } else {
+        userToBefriend.friendRequests.push(currentUser);
+        await userToBefriend.save();
+        return res.status(201).json({
+          status: "success",
+          message: "friendship requested",
+          userToBefriend,
+        });
+      }
+    } catch (err) {
+      res.status(400).json({ status: "error", error: err });
+    }
+  },
+];

@@ -7,5 +7,6 @@ router.get("/test", (req, res) => {
 }); // friend request
 
 router.get("/:id", userController.specificUser);
+router.put("/:id/friend-request", userController.sendFriendRequest__put);
 // update username/profilepicurl
 module.exports = router;

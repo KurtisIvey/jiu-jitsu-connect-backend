@@ -5,6 +5,7 @@ const User = require("../../models/user.model");
 
 const seedDb = require("../testUtils/seedDb");
 let specificUser;
+let specificUser2;
 let token;
 
 beforeAll(async () => {
@@ -16,9 +17,17 @@ beforeAll(async () => {
     email: "test@gmail.com",
     password: "password123",
   };
+  const body2 = {
+    username: "test2",
+    email: "test2@gmail.com",
+    password: "password123",
+  };
   const newUser = await User(body);
+  const newUser2 = await User(body2);
   await newUser.save();
+  await newUser2.save();
   specificUser = newUser;
+  specificUser2 = newUser2;
 
   const res = await request(app)
     .post("/api/auth/login")
@@ -66,5 +75,19 @@ describe("should fetch info from specific user with id", () => {
     expect(res.body).toHaveProperty("user");
     expect(res.body.user).not.toHaveProperty("password");
     expect(res.body.user).not.toHaveProperty("email");
+  });
+});
+
+describe("Friend Requests", () => {
+  test("should send friend request", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser2._id}/friend-request`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("userToBefriend");
+    expect(res.body.userToBefriend.friendRequests.length).toEqual(1);
+
+    console.log(res.body);
   });
 });
