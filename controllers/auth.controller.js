@@ -20,7 +20,7 @@ exports.register__post = [
 
     const user = new User({ username, email, password });
     try {
-      user.save();
+      await user.save();
       res.status(201).json({ status: "ok", message: "successful creation" });
     } catch (err) {
       const errors = userErrorHandler(err);
@@ -42,6 +42,7 @@ exports.login__post = [
     //console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
+
     try {
       const user = await User.login(email, password);
       const token = jwt.sign(
@@ -51,7 +52,6 @@ exports.login__post = [
           _id: user._id,
         },
         process.env.SECRET,
-        // 3 hour expire
         { expiresIn: 60 * 60 * 60 }
       );
       return res.status(200).json({

@@ -64,6 +64,7 @@ describe("should fetch info from specific user with id", () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("user");
+    //console.log(res.body);
   });
   test("should fetch user info WITHOUT password in returned obj", async () => {
     const res = await request(app)
@@ -89,5 +90,14 @@ describe("Friend Requests", () => {
     expect(res.body.userToBefriend.friendRequests.length).toEqual(1);
 
     console.log(res.body);
+  });
+  test("should NOT send ANOTHER friend request", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser2._id}/friend-request`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+    //expect(res.statusCode).toEqual(400);
+
+    //console.log(res.body);
   });
 });
