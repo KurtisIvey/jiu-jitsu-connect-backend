@@ -53,18 +53,24 @@ userSchema.pre("save", async function (next) {
 
 // static method to log in user
 userSchema.statics.login = async function (email, password) {
-  const user = await this.findOne({ email });
-
-  if (user) {
-    console.log("user exists");
-    const auth = await bcrypt.compare(password, user.password);
-
-    if (auth) {
-      return user;
-    }
-    throw Error("incorrect password");
+  if (!email || !password) {
+    throw Error("Email and password are required.");
   }
-  throw Error("incorrect email");
-}; /* */
+
+  const user = await this.findOne({ email }).select("+password");
+
+  if (!user) {
+    throw Error("User not found.");
+  }
+
+  // cannot await the bcrypt.compare or only certain users can log in
+  const auth = bcrypt.compare(password, user.password);
+
+  if (!auth) {
+    throw Error("Incorrect password.");
+  }
+
+  return user;
+};
 
 module.exports = mongoose.model("User", userSchema);

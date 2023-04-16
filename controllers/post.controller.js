@@ -62,7 +62,6 @@ exports.specificPost__get = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id).populate({
       path: "comments",
-
       populate: {
         path: "author",
         model: "User",

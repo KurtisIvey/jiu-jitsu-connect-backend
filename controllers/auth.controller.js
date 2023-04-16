@@ -36,10 +36,9 @@ exports.login__post = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      res.status(422).json({ errors: errors.mapped() });
-      return;
+      return res.status(422).json({ errors: errors.mapped() });
     }
-    //console.log(req.body);
+
     const email = req.body.email;
     const password = req.body.password;
 
@@ -54,7 +53,7 @@ exports.login__post = [
         process.env.SECRET,
         { expiresIn: 60 * 60 * 60 }
       );
-      return res.status(200).json({
+      return res.json({
         status: "ok",
         token,
         user: {
@@ -67,9 +66,9 @@ exports.login__post = [
         },
       });
     } catch (err) {
-      //console.log(err);
-      const errors = userErrorHandler(err);
-      return res.status(400).json({ status: "error", errors });
+      //const errors = userErrorHandler(err);
+      console.log("reach error");
+      return res.status(400).json({ status: "error", errors: err });
     }
   },
 ];
