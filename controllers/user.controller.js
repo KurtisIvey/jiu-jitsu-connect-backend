@@ -5,21 +5,19 @@ exports.specificUser__get = [
   isLoggedIn,
   async (req, res) => {
     try {
-      // withhold password being returned for security
-      const user = await User.findById(req.params.id, {
-        _id: 1,
-        username: 1,
-        friends: 1,
-        friendRequests: 1,
-        profilePicUrl: 1,
-      }).populate("friendRequests");
-      if (user === null) {
-        res.status(404).json({ status: "error", error: "unable to find user" });
-      } else {
-        res.json({ user });
+      const user = await User.findById(req.params.id)
+        .select("_id username friends friendRequests profilePicUrl")
+        .populate("friendRequests");
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ status: "error", error: "Unable to find user" });
       }
-    } catch (err) {
-      res.status(400).json({ status: "error", error: err });
+
+      res.json({ user });
+    } catch (error) {
+      res.status(400).json({ status: "error", error });
     }
   },
 ];
@@ -29,40 +27,46 @@ exports.FriendRequest__put = [
   async (req, res) => {
     try {
       const currentUser = req.user._id;
-
       const userToBefriend = await User.findById(req.params.id);
-      if (userToBefriend === null) {
-        res.status(404).json({ status: "error", error: "user does not exist" });
+
+      if (!userToBefriend) {
+        return res.status(404).json({
+          status: "error",
+          error: "User does not exist",
+        });
       }
+      // stops friend requesting yourself
       if (userToBefriend._id === currentUser) {
-        res.status(400).json({ status: "error", error: "already friends" });
-      } else {
-        if (userToBefriend.friendRequests.includes(currentUser)) {
-          await userToBefriend.updateOne({
-            $pull: { friendRequests: currentUser },
-          });
-          console.log("unrequested");
-          return res.status(201).json({
-            status: "success",
-            message: "friendship unrequested",
-          });
-        } else {
-          await userToBefriend.updateOne({
-            $push: { friendRequests: currentUser },
-          });
-          console.log("requested");
-
-          return res.status(201).json({
-            status: "success",
-            message: "friendship requested",
-            userToBefriend,
-          });
-        }
-
-        //await userToBefriend.save();
+        return res.status(400).json({
+          status: "error",
+          error: "You can't be friends with yourself",
+        });
       }
+      // retract friend request
+      if (userToBefriend.friendRequests.includes(currentUser)) {
+        await userToBefriend.updateOne({
+          $pull: { friendRequests: currentUser },
+        });
+        return res.status(201).json({
+          status: "success",
+          message: "Friendship unrequested",
+        });
+      }
+      // if not currently friends, sends request
+      await userToBefriend.updateOne({
+        $push: { friendRequests: currentUser },
+      });
+
+      return res.status(201).json({
+        status: "success",
+        message: "Friendship requested",
+        userToBefriend,
+      });
     } catch (err) {
-      res.status(400).json({ status: "error", error: err });
+      return res.status(400).json({
+        status: "error",
+        error: err.message,
+      });
     }
   },
 ];
