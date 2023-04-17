@@ -12,8 +12,7 @@ exports.specificUser__get = [
         friends: 1,
         friendRequests: 1,
         profilePicUrl: 1,
-      });
-
+      }).populate("friendRequests");
       if (user === null) {
         res.status(404).json({ status: "error", error: "unable to find user" });
       } else {
