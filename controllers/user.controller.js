@@ -25,7 +25,7 @@ exports.specificUser__get = [
   },
 ];
 
-exports.sendFriendRequest__put = [
+exports.FriendRequest__put = [
   isLoggedIn,
   async (req, res) => {
     try {
@@ -38,13 +38,29 @@ exports.sendFriendRequest__put = [
       if (userToBefriend._id === currentUser) {
         res.status(400).json({ status: "error", error: "already friends" });
       } else {
-        userToBefriend.friendRequests.push(currentUser);
-        await userToBefriend.save();
-        return res.status(201).json({
-          status: "success",
-          message: "friendship requested",
-          userToBefriend,
-        });
+        if (userToBefriend.friendRequests.includes(currentUser)) {
+          await userToBefriend.updateOne({
+            $pull: { friendRequests: currentUser },
+          });
+          console.log("unrequested");
+          return res.status(201).json({
+            status: "success",
+            message: "friendship unrequested",
+          });
+        } else {
+          await userToBefriend.updateOne({
+            $push: { friendRequests: currentUser },
+          });
+          console.log("requested");
+
+          return res.status(201).json({
+            status: "success",
+            message: "friendship requested",
+            userToBefriend,
+          });
+        }
+
+        //await userToBefriend.save();
       }
     } catch (err) {
       res.status(400).json({ status: "error", error: err });

@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
+const bcrypt = require("bcrypt");
 
 const userErrorHandler = require("../utilities/error_handler");
 
@@ -11,6 +12,7 @@ exports.register__post = [
   async (req, res) => {
     // errors detected via express-validator in the sanitization and escaping prior
     const errors = validationResult(req);
+    //console.log("reach 2");
 
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.mapped() });
@@ -24,7 +26,7 @@ exports.register__post = [
       res.status(201).json({ status: "ok", message: "successful creation" });
     } catch (err) {
       const errors = userErrorHandler(err);
-      res.status(400).json({ status: "error", errors });
+      res.status(400).json({ status: "error", errors, err: err });
     }
   },
 ];
@@ -67,7 +69,7 @@ exports.login__post = [
       });
     } catch (err) {
       //const errors = userErrorHandler(err);
-      console.log("reach error");
+      //console.log("reach error");
       return res.status(400).json({ status: "error", errors: err });
     }
   },
