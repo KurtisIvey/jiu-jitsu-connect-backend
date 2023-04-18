@@ -22,12 +22,16 @@ exports.specificUser__get = [
   },
 ];
 
+/*
+allows friend request to be sent and retracted by person requesting friendship
+*/
 exports.FriendRequest__put = [
   isLoggedIn,
   async (req, res) => {
     try {
       const currentUser = req.user._id;
       const userToBefriend = await User.findById(req.params.id);
+      //console.log(currentUser, userToBefriend._id);
 
       if (!userToBefriend) {
         return res.status(404).json({
@@ -36,7 +40,7 @@ exports.FriendRequest__put = [
         });
       }
       // stops friend requesting yourself
-      if (userToBefriend._id === currentUser) {
+      if (currentUser.equals(userToBefriend._id)) {
         return res.status(400).json({
           status: "error",
           error: "You can't be friends with yourself",

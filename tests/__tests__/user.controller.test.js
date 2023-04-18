@@ -85,19 +85,36 @@ describe("Friend Requests", () => {
       .put(`/api/users/${specificUser2._id}/friend-request`)
       .set("Authorization", token)
       .set("Accept", "application/json");
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty("userToBefriend");
-    expect(res.body.userToBefriend.friendRequests.length).toEqual(1);
 
-    console.log(res.body);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("message");
+    expect(res.body.message).toEqual("Friendship requested");
   });
-  test("should NOT send ANOTHER friend request", async () => {
+  test("should RETRACT friend request due to being previously sent", async () => {
     const res = await request(app)
       .put(`/api/users/${specificUser2._id}/friend-request`)
       .set("Authorization", token)
       .set("Accept", "application/json");
-    //expect(res.statusCode).toEqual(400);
 
-    //console.log(res.body);
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty("message");
+    expect(res.body.message).toEqual("Friendship unrequested");
+  });
+  test("should FAIL to send friend request due to bad ._id", async () => {
+    const res = await request(app)
+      .put(`/api/users/432143241231234233242/friend-request`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+
+    expect(res.statusCode).toEqual(400);
+  });
+  test("should RETRACT friend request due to being previously sent", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friend-request`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.error).toEqual("You can't be friends with yourself");
   });
 });
