@@ -31,7 +31,6 @@ exports.FriendRequest__put = [
     try {
       const currentUser = req.user._id;
       const userToBefriend = await User.findById(req.params.id);
-      //console.log(currentUser, userToBefriend._id);
 
       if (!userToBefriend) {
         return res.status(404).json({
@@ -75,19 +74,20 @@ exports.FriendRequest__put = [
   },
 ];
 
-exports.FriendRequestDeny__delete = [
+exports.FriendRequestDeny__put = [
   isLoggedIn,
   async (req, res) => {
     try {
-      const { userId, friendId } = req.body;
-      const user = await User.findById(userId);
-      const friendIndex = user.friendRequests.indexOf(friendId);
-      if (friendIndex !== -1) {
-        user.friendRequests.splice(friendIndex, 1);
-        await user.save();
-        res.status(200).json({ message: "Friend request denied" });
-      } else {
-        res.status(404).json({ message: "Friend request not found" });
+      const requesteeId = req.body.requester;
+      const user = await User.findById(req.user._id);
+      if (user.friendRequests.includes(requesteeId)) {
+        await user.updateOne({
+          $pull: { friendRequests: requesteeId },
+        });
+        return res.status(201).json({
+          status: "success",
+          message: `Friendship request Denied for ${requesteeId}`,
+        });
       }
     } catch (err) {
       console.error(err);

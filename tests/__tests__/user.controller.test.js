@@ -79,7 +79,7 @@ describe("should fetch info from specific user with id", () => {
   });
 });
 
-describe("Friend Requests", () => {
+describe("Friend Requests send and retract", () => {
   test("should send friend request", async () => {
     const res = await request(app)
       .put(`/api/users/${specificUser2._id}/friend-request`)
@@ -116,5 +116,26 @@ describe("Friend Requests", () => {
 
     expect(res.statusCode).toEqual(400);
     expect(res.body.error).toEqual("You can't be friends with yourself");
+  });
+});
+
+describe("Friend Request Accept and Deny", () => {
+  test("should deny friend Request", async () => {
+    //send friend request from specificUser to specificUser2
+    const res1 = await request(app)
+      .put(`/api/users/${specificUser2._id}/friend-request`)
+      .set("Authorization", token)
+      .set("Accept", "application/json");
+
+    let view = await User.findById(specificUser2._id);
+    console.log(view);
+
+    const newLogin = await request(app)
+      .post("/api/auth/login")
+      .send({ email: "test2@gmail.com", password: "password123" })
+      .set("Accept", "application/json");
+    token = newLogin.body.token;
+
+    console.log(newLogin.body);
   });
 });
