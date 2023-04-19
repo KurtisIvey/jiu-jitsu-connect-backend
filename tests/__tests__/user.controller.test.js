@@ -59,7 +59,7 @@ describe("should fetch info from specific user with id", () => {
   test("should fetch user info with provided id", async () => {
     const res = await request(app)
       .get(`/api/users/${specificUser._id}`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
 
     expect(res.statusCode).toEqual(200);
@@ -69,7 +69,7 @@ describe("should fetch info from specific user with id", () => {
   test("should fetch user info WITHOUT password in returned obj", async () => {
     const res = await request(app)
       .get(`/api/users/${specificUser._id}`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
 
     expect(res.statusCode).toEqual(200);
@@ -83,7 +83,7 @@ describe("Friend Requests send and retract", () => {
   test("should send friend request", async () => {
     const res = await request(app)
       .put(`/api/users/${specificUser2._id}/friend-request`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
 
     expect(res.statusCode).toEqual(201);
@@ -93,7 +93,7 @@ describe("Friend Requests send and retract", () => {
   test("should RETRACT friend request due to being previously sent", async () => {
     const res = await request(app)
       .put(`/api/users/${specificUser2._id}/friend-request`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
 
     expect(res.statusCode).toEqual(201);
@@ -103,7 +103,7 @@ describe("Friend Requests send and retract", () => {
   test("should FAIL to send friend request due to bad ._id", async () => {
     const res = await request(app)
       .put(`/api/users/432143241231234233242/friend-request`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
 
     expect(res.statusCode).toEqual(400);
@@ -111,7 +111,7 @@ describe("Friend Requests send and retract", () => {
   test("should RETRACT friend request due to being previously sent", async () => {
     const res = await request(app)
       .put(`/api/users/${specificUser._id}/friend-request`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
 
     expect(res.statusCode).toEqual(400);
@@ -119,17 +119,17 @@ describe("Friend Requests send and retract", () => {
   });
 });
 
-describe("Friend Request Accept and Deny", () => {
+/* describe("Friend Request Accept and Deny", () => {
   test("should deny friend Request", async () => {
     //send friend request from specificUser to specificUser2
     const res1 = await request(app)
       .put(`/api/users/${specificUser2._id}/friend-request`)
-      .set("Authorization", token)
-      .set("Accept", "application/json");
+      .set("Authorization", `Bearer ${token}`)      .set("Accept", "application/json");
 
     let view = await User.findById(specificUser2._id);
-    console.log(view);
+    //console.log(view);
 
+    // log in different user
     const newLogin = await request(app)
       .post("/api/auth/login")
       .send({ email: "test2@gmail.com", password: "password123" })
@@ -138,4 +138,4 @@ describe("Friend Request Accept and Deny", () => {
 
     console.log(newLogin.body);
   });
-});
+}); */

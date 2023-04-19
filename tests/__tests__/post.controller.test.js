@@ -49,9 +49,10 @@ describe("Create Post", () => {
   test("should create new post w/ token and text content", async () => {
     const res = await request(app)
       .post("/api/posts")
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json")
       .send({ postContent: "test post content" });
+
     expect(res.statusCode).toEqual(201);
     expect(res.body.message).toEqual("post creation success");
   });
@@ -67,7 +68,7 @@ describe("Create Post", () => {
   test("should NOT create new post due to empty postContent input", async () => {
     const res = await request(app)
       .post("/api/posts")
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json")
       .send({});
     expect(res.statusCode).toEqual(422);
@@ -78,7 +79,7 @@ describe("Get Posts", () => {
   test("should get posts as long as logged in", async () => {
     const res = await request(app)
       .get("/api/posts")
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     // 15 posts created on seedDb, plus 1 through prev tests
@@ -95,13 +96,13 @@ describe("Get posts by User", () => {
     // create another post from user
     const sres = await request(app)
       .post("/api/posts")
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json")
       .send({ postContent: "test post content" });
 
     const res = await request(app)
       .get(`/api/posts/byUserId/${specificUser._id}`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     expect(res.body.posts.length).toEqual(2);
@@ -118,7 +119,7 @@ describe("Get posts by User", () => {
 
     const res = await request(app)
       .get(`/api/posts/byUserId/${nonPostingUser._id}`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     expect(res.body.posts.length).toEqual(0);
@@ -130,7 +131,7 @@ describe("Get Specific Posts", () => {
     //specificPost is created and then defined in beforeAll
     const res = await request(app)
       .get(`/api/posts/${specificPost._id}`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("post");
@@ -142,7 +143,7 @@ describe("Comment Post", () => {
   test("should comment on post ", async () => {
     const res = await request(app)
       .put(`/api/posts/${specificPost._id}/comment`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json")
       .send({ commentContent: "test comment" });
 
@@ -160,7 +161,7 @@ describe("Comment Post", () => {
   test("should NOT comment on post w/o comment field filled in ", async () => {
     const res = await request(app)
       .put(`/api/posts/${specificPost._id}/comment`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(422);
   });
@@ -170,7 +171,7 @@ describe("Like Post", () => {
   test("should like post ", async () => {
     const res = await request(app)
       .put(`/api/posts/${specificPost._id}/like`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     //console.log(res.body);
     expect(res.statusCode).toEqual(201);
@@ -179,7 +180,7 @@ describe("Like Post", () => {
   test("should UNLIKE post ", async () => {
     const res = await request(app)
       .put(`/api/posts/${specificPost._id}/like`)
-      .set("Authorization", token)
+      .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
     //console.log(res.body);
     expect(res.statusCode).toEqual(201);
