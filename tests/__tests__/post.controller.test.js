@@ -83,7 +83,7 @@ describe("Get Posts", () => {
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     // 15 posts created on seedDb, plus 1 through prev tests
-    expect(res.body.posts.length).toEqual(16);
+    expect(res.body.posts.length).toEqual(19);
     expect(res.header["content-type"]).toEqual(expect.stringMatching(/json/));
     expect(res.body).toHaveProperty("posts");
 

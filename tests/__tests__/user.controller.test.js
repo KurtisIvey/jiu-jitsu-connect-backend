@@ -22,19 +22,20 @@ beforeAll(async () => {
     email: "test2@gmail.com",
     password: "password123",
   };
-  const newUser = await User(body);
+  //const newUser = await User(body);
   const newUser2 = await User(body2);
-  await newUser.save();
+  //await newUser.save();
   await newUser2.save();
-  specificUser = newUser;
+  //specificUser = newUser;
   specificUser2 = newUser2;
 
   const res = await request(app)
     .post("/api/auth/login")
-    .send({ email: "test@gmail.com", password: "password123" })
+    .send({ email: "testKing@gmail.com", password: "password123" })
     .set("Accept", "application/json");
   token = res.body.token;
-  //console.log(specificUser);
+  specificUser = res.body.user;
+  console.log(specificUser);
 });
 
 describe("should confirm that post router is connected", () => {
@@ -119,12 +120,13 @@ describe("Friend Requests send and retract", () => {
   });
 });
 
-/* describe("Friend Request Accept and Deny", () => {
+describe("Friend Request Accept and Deny", () => {
   test("should deny friend Request", async () => {
     //send friend request from specificUser to specificUser2
     const res1 = await request(app)
       .put(`/api/users/${specificUser2._id}/friend-request`)
-      .set("Authorization", `Bearer ${token}`)      .set("Accept", "application/json");
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json");
 
     let view = await User.findById(specificUser2._id);
     //console.log(view);
@@ -136,6 +138,9 @@ describe("Friend Requests send and retract", () => {
       .set("Accept", "application/json");
     token = newLogin.body.token;
 
-    console.log(newLogin.body);
+    //console.log(newLogin.body);
+
+    let view2 = await User.find({});
+    //console.log(view2);
   });
-}); */
+});

@@ -9,22 +9,16 @@ const bcrypt = require("bcrypt");
 const testUsers = [];
 const testPosts = [];
 
-/* const genPass = async (password) => {
-  const salt = await bcrypt.genSalt();
-  hashedPassword = await bcrypt.hash(password, salt);
-  return hashedPassword;
-};
-
 const generateTestUser = async () => {
   const body = {
-    username: "test",
-    email: "test@gmail.com",
+    username: "testking",
+    email: "testKing@gmail.com",
     password: "password123",
   };
   const newUser = new User(body);
   // console.log(newUser);
   testUsers.push(newUser);
-}; */
+};
 
 const generateFakerUsers = async () => {
   const body = {
@@ -55,13 +49,23 @@ const genFakePosts = () => {
   });
 };
 
+const genFriendRequests = () => {
+  const specificUser = testUsers.find((user) => user.username === "testking");
+  //console.log(testUsers);
+  const fakeUsers = testUsers.filter((user) => user.username !== "testKing");
+  fakeUsers.forEach((user) => {
+    specificUser.friendRequests.push(user._id);
+  });
+};
+
 const seedDb = async () => {
   //console.log(faker.date.past(10));
-  //generateTestUser();
+  generateTestUser();
   for (i = 0; i < 5; i++) {
     generateFakerUsers();
   }
   genFakePosts();
+  genFriendRequests();
   testUsers.forEach(async (testUser) => {
     try {
       await testUser.save();

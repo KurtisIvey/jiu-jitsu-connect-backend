@@ -74,24 +74,78 @@ exports.FriendRequest__put = [
   },
 ];
 
-exports.FriendRequestDeny__put = [
+exports.FriendRequestResponse__put = [
   isLoggedIn,
   async (req, res) => {
     try {
-      const requesteeId = req.body.requester;
-      const user = await User.findById(req.user._id);
-      if (user.friendRequests.includes(requesteeId)) {
-        await user.updateOne({
-          $pull: { friendRequests: requesteeId },
+      const currentUser = req.user._id;
+      const friendRequestId = req.params.id;
+      const response = req.body.response;
+
+      const user = await User.findById(currentUser);
+      if (!user) {
+        return res.status(404).json({
+          status: "error",
+          error: "User does not exist",
         });
-        return res.status(201).json({
+      }
+
+      if (response === "accept") {
+        // Accept friend request
+        const friendRequestIndex = user.friendRequests.indexOf(friendRequestId);
+        if (friendRequestIndex === -1) {
+          return res.status(400).json({
+            status: "error",
+            error: "Friend request not found",
+          });
+        }
+        user.friendRequests.splice(friendRequestIndex, 1);
+        user.friends.push(friendRequestId);
+        await user.save();
+
+        // Add current user as friend for the requester
+        const requester = await User.findByIdAndUpdate(friendRequestId, {
+          $push: { friends: currentUser },
+          $pull: { friendRequests: currentUser },
+        });
+
+        return res.status(200).json({
           status: "success",
-          message: `Friendship request Denied for ${requesteeId}`,
+          message: "Friend request accepted",
+          requester,
+        });
+      } else if (response === "deny") {
+        // Deny friend request
+        const friendRequestIndex = user.friendRequests.indexOf(friendRequestId);
+        if (friendRequestIndex === -1) {
+          return res.status(400).json({
+            status: "error",
+            error: "Friend request not found",
+          });
+        }
+        user.friendRequests.splice(friendRequestIndex, 1);
+        await user.save();
+
+        // Remove friend request for the requester
+        await User.findByIdAndUpdate(friendRequestId, {
+          $pull: { friendRequests: currentUser },
+        });
+
+        return res.status(200).json({
+          status: "success",
+          message: "Friend request denied",
+        });
+      } else {
+        return res.status(400).json({
+          status: "error",
+          error: "Invalid friend request response",
         });
       }
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(400).json({
+        status: "error",
+        error: err.message,
+      });
     }
   },
 ];
