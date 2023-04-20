@@ -7,16 +7,12 @@ const seedDb = require("../testUtils/seedDb");
 let specificUser;
 let specificUser2;
 let token;
+let obj;
 
 beforeAll(async () => {
   // assign to obj so I can access when needed
-  const obj = await seedDb();
+  obj = await seedDb();
 
-  const body = {
-    username: "test",
-    email: "test@gmail.com",
-    password: "password123",
-  };
   const body2 = {
     username: "test2",
     email: "test2@gmail.com",
@@ -35,7 +31,8 @@ beforeAll(async () => {
     .set("Accept", "application/json");
   token = res.body.token;
   specificUser = res.body.user;
-  console.log(specificUser);
+  //console.log(specificUser.friendRequests.length);
+  //console.log(obj.testUsers);
 });
 
 describe("should confirm that post router is connected", () => {
@@ -121,26 +118,69 @@ describe("Friend Requests send and retract", () => {
 });
 
 describe("Friend Request Accept and Deny", () => {
-  test("should deny friend Request", async () => {
-    //send friend request from specificUser to specificUser2
-    const res1 = await request(app)
-      .put(`/api/users/${specificUser2._id}/friend-request`)
+  test("should return an error when the user is not logged in", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friend-request-handler`)
+      .set("Accept", "application/json")
+      .send({
+        requesterId: obj.testUsers[1]._id,
+        response: "deny",
+      });
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.error).toEqual("unauthorized access");
+  });
+
+  test("should return an error when an invalid friend request response is provided", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friend-request-handler`)
       .set("Authorization", `Bearer ${token}`)
-      .set("Accept", "application/json");
+      .set("Accept", "application/json")
+      .send({
+        requesterId: obj.testUsers[1]._id,
+        response: "invalid",
+      });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.error).toEqual("Invalid friend request response");
+  });
 
-    let view = await User.findById(specificUser2._id);
-    //console.log(view);
+  test("should return an error when the friend request is not found", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friend-request-handler`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({
+        requesterId: "invalid-id",
+        response: "deny",
+      });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.error).toEqual("Friend request not found");
+  });
 
-    // log in different user
-    const newLogin = await request(app)
-      .post("/api/auth/login")
-      .send({ email: "test2@gmail.com", password: "password123" })
-      .set("Accept", "application/json");
-    token = newLogin.body.token;
+  test("should accept friend request and add requester as friend", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friend-request-handler`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({
+        requesterId: obj.testUsers[1]._id,
+        response: "accept",
+      });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual("Friend request accepted");
+  });
 
-    //console.log(newLogin.body);
-
-    let view2 = await User.find({});
-    //console.log(view2);
+  test("should deny friend request and remove it from user's friend requests", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friend-request-handler`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({
+        requesterId: obj.testUsers[2]._id,
+        response: "deny",
+      });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual("Friend request denied");
+    const user = await User.findById(specificUser._id);
+    expect(user.friendRequests).not.toContain(obj.testUsers[2]._id);
   });
 });

@@ -8,5 +8,10 @@ router.get("/test", (req, res) => {
 
 router.get("/:id", userController.specificUser__get);
 router.put("/:id/friend-request", userController.FriendRequest__put);
+router.put(
+  "/:id/friend-request-handler",
+  userController.FriendRequestResponse__put
+);
+
 // update username/profilepicurl
 module.exports = router;

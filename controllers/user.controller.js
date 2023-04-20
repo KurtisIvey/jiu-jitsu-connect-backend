@@ -1,4 +1,6 @@
 const { isLoggedIn } = require("../middleware/isLoggedIn");
+const { check } = require("express-validator");
+
 const User = require("../models/user.model");
 
 exports.specificUser__get = [
@@ -76,11 +78,23 @@ exports.FriendRequest__put = [
 
 exports.FriendRequestResponse__put = [
   isLoggedIn,
+  check("response")
+    .isIn(["accept", "deny"])
+    .withMessage("Invalid friend request response"),
+
   async (req, res) => {
     try {
       const currentUser = req.user._id;
-      const friendRequestId = req.params.id;
+      const friendRequestId = req.body.requesterId;
       const response = req.body.response;
+
+      const validResponses = ["accept", "deny"];
+      if (!validResponses.includes(response)) {
+        return res.status(400).json({
+          status: "error",
+          error: "Invalid friend request response",
+        });
+      }
 
       const user = await User.findById(currentUser);
       if (!user) {
@@ -99,14 +113,14 @@ exports.FriendRequestResponse__put = [
             error: "Friend request not found",
           });
         }
-        user.friendRequests.splice(friendRequestIndex, 1);
-        user.friends.push(friendRequestId);
-        await user.save();
+        await user.updateOne({
+          $pull: { friendRequests: friendRequestId },
+          $push: { friends: friendRequestId },
+        });
 
         // Add current user as friend for the requester
         const requester = await User.findByIdAndUpdate(friendRequestId, {
           $push: { friends: currentUser },
-          $pull: { friendRequests: currentUser },
         });
 
         return res.status(200).json({
@@ -123,22 +137,14 @@ exports.FriendRequestResponse__put = [
             error: "Friend request not found",
           });
         }
-        user.friendRequests.splice(friendRequestIndex, 1);
-        await user.save();
-
-        // Remove friend request for the requester
-        await User.findByIdAndUpdate(friendRequestId, {
-          $pull: { friendRequests: currentUser },
+        await user.updateOne({
+          $pull: { friendRequests: friendRequestId },
         });
+        // Remove friend request for the requester
 
         return res.status(200).json({
           status: "success",
           message: "Friend request denied",
-        });
-      } else {
-        return res.status(400).json({
-          status: "error",
-          error: "Invalid friend request response",
         });
       }
     } catch (err) {
