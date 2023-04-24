@@ -184,3 +184,18 @@ describe("Friend Request Accept and Deny", () => {
     expect(user.friendRequests).not.toContain(obj.testUsers[2]._id);
   });
 });
+
+describe("update account user settings", () => {
+  test("should update username", async () => {
+    const res = await request(app)
+      .put(`/api/users/account-settings`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({
+        username: "testing123",
+      });
+
+    expect(res.statusCode).toEqual(200);
+    console.log(res.body);
+  });
+});

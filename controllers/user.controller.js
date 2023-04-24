@@ -94,7 +94,6 @@ exports.FriendRequestResponse__put = [
       const currentUser = req.user._id;
       const friendRequestId = req.body.requesterId;
       const response = req.body.response;
-      console.log(friendRequestId);
 
       const validResponses = ["accept", "deny"];
       if (!validResponses.includes(response)) {
@@ -168,6 +167,21 @@ exports.accountSettings__put = [
   isLoggedIn,
   body("username").trim().blacklist(regex),
   async (req, res) => {
-    const currentUser = User.findById(req.user._id);
+    // username field on frontend will be populated w/ current name
+    // if no file is passed through, do not change user.profilePicUrl
+    try {
+      const filter = { _id: req.user._id };
+      const update = { username: req.body.username };
+      const currentUser = await User.updateOne(filter, update);
+
+      const loggedinuser = await User.findById(req.user._id);
+
+      res
+        .status(200)
+        .json({ message: "Username updated successfully.", loggedinuser });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error." });
+    }
   },
 ];
