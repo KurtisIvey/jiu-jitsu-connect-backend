@@ -186,6 +186,17 @@ describe("Friend Request Accept and Deny", () => {
 });
 
 describe("update account user settings", () => {
+  test("should return an error when the user is not logged in", async () => {
+    const res = await request(app)
+      .put(`/api/users/account-settings`)
+      .set("Accept", "application/json")
+      .send({
+        username: "testing123",
+      });
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.error).toEqual("unauthorized access");
+  });
+
   test("should update username", async () => {
     const res = await request(app)
       .put(`/api/users/account-settings`)
@@ -194,8 +205,8 @@ describe("update account user settings", () => {
       .send({
         username: "testing123",
       });
-
     expect(res.statusCode).toEqual(200);
+    expect(res.body.currentUser.username).toEqual("testing123");
     console.log(res.body);
   });
 });
