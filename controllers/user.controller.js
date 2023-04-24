@@ -1,7 +1,13 @@
 const { isLoggedIn } = require("../middleware/isLoggedIn");
-const { check } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 
+const { check } = require("express-validator");
 const User = require("../models/user.model");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+const regex = /<>\$\/\|\[\]~`/;
 
 exports.specificUser__get = [
   isLoggedIn,
@@ -155,5 +161,13 @@ exports.FriendRequestResponse__put = [
         error: err.message,
       });
     }
+  },
+];
+
+exports.accountSettings__put = [
+  isLoggedIn,
+  body("username").trim().blacklist(regex),
+  async (req, res) => {
+    const currentUser = User.findById(req.user._id);
   },
 ];

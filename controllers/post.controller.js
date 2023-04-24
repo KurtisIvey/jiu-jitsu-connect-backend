@@ -5,7 +5,7 @@ const Comment = require("../models/comment.model");
 // middleware must be destructured otherwise error occurs
 const { isLoggedIn } = require("../middleware/isLoggedIn");
 
-let regex = /<>\$\/\|\[\]~`/;
+const regex = /<>\$\/\|\[\]~`/;
 /*
 // post schema setup 
 author: {
