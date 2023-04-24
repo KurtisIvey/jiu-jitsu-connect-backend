@@ -165,7 +165,7 @@ exports.FriendRequestResponse__put = [
 
 exports.accountSettings__put = [
   isLoggedIn,
-  body("username").trim().blacklist(regex),
+  body("username").trim().blacklist(regex).notEmpty(),
   async (req, res) => {
     // username field on frontend will be populated w/ current name
     // if no file is passed through, do not change user.profilePicUrl
