@@ -167,6 +167,12 @@ exports.accountSettings__put = [
   isLoggedIn,
   body("username").trim().blacklist(regex).notEmpty(),
   async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      res.status(422).json({ errors: errors.mapped() });
+      return;
+    }
     // username field on frontend will be populated w/ current name
     // if no file is passed through, do not change user.profilePicUrl
     try {
