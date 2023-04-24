@@ -12,6 +12,7 @@ router.put(
   "/:id/friend-request-handler",
   userController.FriendRequestResponse__put
 );
+router.put("/account-settings", userController.accountSettings__put);
 
 // update username/profilepicurl
 module.exports = router;

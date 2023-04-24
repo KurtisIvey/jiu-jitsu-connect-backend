@@ -9,7 +9,8 @@ exports.specificUser__get = [
     try {
       const user = await User.findById(req.params.id)
         .select("_id username friends friendRequests profilePicUrl")
-        .populate("friendRequests");
+        .populate("friendRequests")
+        .populate("friends", "username _id profilePicUrl");
 
       if (!user) {
         return res
@@ -87,6 +88,7 @@ exports.FriendRequestResponse__put = [
       const currentUser = req.user._id;
       const friendRequestId = req.body.requesterId;
       const response = req.body.response;
+      console.log(friendRequestId);
 
       const validResponses = ["accept", "deny"];
       if (!validResponses.includes(response)) {
