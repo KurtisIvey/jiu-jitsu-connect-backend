@@ -172,13 +172,17 @@ exports.accountSettings__put = [
     try {
       const filter = { _id: req.user._id };
       const update = { username: req.body.username };
-      const currentUser = await User.updateOne(filter, update);
+      await User.updateOne(filter, update);
 
-      const loggedinuser = await User.findById(req.user._id);
+      // only need username and profilePicUrl as those are what will be updated
+      // will run redux reducers on front end to set updated username and profilePicUrl
+      const currentUser = await User.findById(req.user._id).select(
+        " username profilePicUrl"
+      );
 
       res
         .status(200)
-        .json({ message: "Username updated successfully.", loggedinuser });
+        .json({ message: "Username updated successfully.", currentUser });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error." });
