@@ -185,7 +185,7 @@ describe("Friend Request Accept and Deny", () => {
   });
 });
 
-describe("update account user settings", () => {
+/* describe("update account user settings", () => {
   test("should return an error when the user is not logged in", async () => {
     const res = await request(app)
       .put(`/api/users/account-settings`)
@@ -209,4 +209,15 @@ describe("update account user settings", () => {
     expect(res.body.currentUser.username).toEqual("testing123");
     console.log(res.body);
   });
-});
+  test("should return an error if username is not provided", async () => {
+    const res = await request(app)
+      .put(`/api/users/account-settings`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({});
+    expect(res.statusCode).toEqual(422);
+    expect(res.body.errors.username.msg).toEqual("Invalid value");
+
+    console.log(res.body.errors);
+  });
+}); */

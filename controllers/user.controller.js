@@ -5,7 +5,7 @@ const { check } = require("express-validator");
 const User = require("../models/user.model");
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const { uploadToS3 } = require("../utilities/s3");
 
 const regex = /<>\$\/\|\[\]~`/;
 
@@ -173,9 +173,14 @@ exports.accountSettings__put = [
       res.status(422).json({ errors: errors.mapped() });
       return;
     }
+    //const { file } = req;
+    const file = req.file;
+    console.log(file);
+    console.log(req.body);
+
     // username field on frontend will be populated w/ current name
     // if no file is passed through, do not change user.profilePicUrl
-    try {
+    /* try {
       const filter = { _id: req.user._id };
       const update = { username: req.body.username };
       await User.updateOne(filter, update);
@@ -192,6 +197,6 @@ exports.accountSettings__put = [
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error." });
-    }
+    } */
   },
 ];
