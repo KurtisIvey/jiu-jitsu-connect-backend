@@ -5,7 +5,7 @@ const { check } = require("express-validator");
 const User = require("../models/user.model");
 const multer = require("multer");
 const storage = multer.memoryStorage();
-const { uploadToS3 } = require("../utilities/s3");
+const { uploadToS3, handleFile } = require("../utilities/s3");
 
 const regex = /<>\$\/\|\[\]~`/;
 
@@ -173,30 +173,39 @@ exports.accountSettings__put = [
       res.status(422).json({ errors: errors.mapped() });
       return;
     }
-    //const { file } = req;
-    const file = req.file;
-    console.log(file);
-    console.log(req.body);
 
-    // username field on frontend will be populated w/ current name
-    // if no file is passed through, do not change user.profilePicUrl
-    /* try {
+    const file = req.file;
+    let profilePicUrl = null;
+
+    if (file) {
+      try {
+        // handleFile is imported func that uploads photo to s3
+        profilePicUrl = handleFile(file);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Error handling file." });
+        return;
+      }
+    }
+
+    try {
       const filter = { _id: req.user._id };
       const update = { username: req.body.username };
+      // wont be null if prev code to upload to s3 set to profilePicUrl
+      if (profilePicUrl) {
+        update.profilePicUrl = profilePicUrl;
+      }
       await User.updateOne(filter, update);
-
-      // only need username and profilePicUrl as those are what will be updated
-      // will run redux reducers on front end to set updated username and profilePicUrl
       const currentUser = await User.findById(req.user._id).select(
-        " username profilePicUrl"
+        "username profilePicUrl"
       );
-
-      res
-        .status(200)
-        .json({ message: "Username updated successfully.", currentUser });
+      res.status(200).json({
+        message: "Account settings updated successfully.",
+        currentUser,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal server error." });
-    } */
+    }
   },
 ];

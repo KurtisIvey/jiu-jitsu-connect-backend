@@ -1,9 +1,8 @@
 const request = require("supertest");
 const app = require("../appTest");
-const Post = require("../../models/post.model");
 const User = require("../../models/user.model");
-
 const seedDb = require("../testUtils/seedDb");
+
 let specificUser;
 let specificUser2;
 let token;
@@ -185,7 +184,7 @@ describe("Friend Request Accept and Deny", () => {
   });
 });
 
-/* describe("update account user settings", () => {
+describe("update account user settings", () => {
   test("should return an error when the user is not logged in", async () => {
     const res = await request(app)
       .put(`/api/users/account-settings`)
@@ -207,9 +206,9 @@ describe("Friend Request Accept and Deny", () => {
       });
     expect(res.statusCode).toEqual(200);
     expect(res.body.currentUser.username).toEqual("testing123");
-    console.log(res.body);
   });
-  test("should return an error if username is not provided", async () => {
+
+  test("should return an ERROR if username is not provided", async () => {
     const res = await request(app)
       .put(`/api/users/account-settings`)
       .set("Authorization", `Bearer ${token}`)
@@ -217,7 +216,20 @@ describe("Friend Request Accept and Deny", () => {
       .send({});
     expect(res.statusCode).toEqual(422);
     expect(res.body.errors.username.msg).toEqual("Invalid value");
-
-    console.log(res.body.errors);
   });
-}); */
+
+  test("should return an error if database update fails", async () => {
+    jest
+      .spyOn(User, "updateOne")
+      .mockRejectedValue(new Error("Database error"));
+    const res = await request(app)
+      .put(`/api/users/account-settings`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({
+        username: "testing123",
+      });
+    expect(res.statusCode).toEqual(500);
+    expect(res.body.message).toEqual("Internal server error.");
+  });
+});
