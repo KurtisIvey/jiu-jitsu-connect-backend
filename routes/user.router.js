@@ -15,6 +15,7 @@ router.put(
   "/:id/friend-request-handler",
   userController.FriendRequestResponse__put
 );
+router.put("/:id/friends", userController.removeFriend__put);
 router.put(
   "/account-settings",
   upload.single("image"),

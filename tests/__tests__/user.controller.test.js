@@ -181,6 +181,45 @@ describe("Friend Request Accept and Deny", () => {
     expect(res.body.message).toEqual("Friend request denied");
     const user = await User.findById(specificUser._id);
     expect(user.friendRequests).not.toContain(obj.testUsers[2]._id);
+    //console.log(user);
+  });
+});
+
+describe("Remove Friend", () => {
+  // removes friend set by previous tests
+  test("should remove friend when logged in", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friends`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({
+        unfriendId: obj.testUsers[1]._id,
+      });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toEqual("Friend successfully removed");
+    const user = await User.findById(specificUser._id);
+    expect(user.friends.length).toEqual(0);
+  });
+  test("should return 401 when not logged in", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friends`)
+      .send({ unfriendId: "test_friend_id" });
+    expect(res.statusCode).toEqual(401);
+  });
+  test("should return 400 when friend ID is not provided", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friends`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({});
+    expect(res.statusCode).toEqual(400);
+  });
+  test("should return 400 when friend id not in friends ", async () => {
+    const res = await request(app)
+      .put(`/api/users/${specificUser._id}/friends`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ unfriendId: "test_friend_id" });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.error).toEqual("Friend not found");
   });
 });
 

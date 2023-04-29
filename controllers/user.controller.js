@@ -163,6 +163,39 @@ exports.FriendRequestResponse__put = [
   },
 ];
 
+exports.removeFriend__put = [
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id);
+      const friendIdToRemove = req.body.unfriendId;
+      const friendIndex = user.friends.indexOf(friendIdToRemove);
+
+      // if friend doesn't exist in friends under user
+      if (friendIndex === -1) {
+        return res.status(400).json({
+          status: "error",
+          error: "Friend not found",
+        });
+      }
+      // must use update to prevent rehash of password
+      await user.updateOne({
+        $pull: { friends: friendIdToRemove },
+      });
+
+      return res.status(200).json({
+        status: "success",
+        message: "Friend successfully removed",
+      });
+    } catch (err) {
+      return res.status(400).json({
+        status: "error",
+        error: err.message,
+      });
+    }
+  },
+];
+
 exports.accountSettings__put = [
   isLoggedIn,
   body("username").trim().blacklist(regex).notEmpty(),
@@ -173,7 +206,6 @@ exports.accountSettings__put = [
       res.status(422).json({ errors: errors.mapped() });
       return;
     }
-
     const file = req.file;
     let profilePicUrl = null;
 
