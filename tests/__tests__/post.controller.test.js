@@ -86,8 +86,6 @@ describe("Get Posts", () => {
     expect(res.body.posts.length).toEqual(19);
     expect(res.header["content-type"]).toEqual(expect.stringMatching(/json/));
     expect(res.body).toHaveProperty("posts");
-
-    //console.log(res.statusCode);
   });
 });
 
@@ -135,7 +133,6 @@ describe("Get Specific Posts", () => {
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("post");
-    //console.log(res.body);
   });
 });
 
@@ -173,7 +170,6 @@ describe("Like Post", () => {
       .put(`/api/posts/${specificPost._id}/like`)
       .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
-    //console.log(res.body);
     expect(res.statusCode).toEqual(201);
     expect(res.body.message).toEqual("post liked");
   });
@@ -182,7 +178,6 @@ describe("Like Post", () => {
       .put(`/api/posts/${specificPost._id}/like`)
       .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
-    //console.log(res.body);
     expect(res.statusCode).toEqual(201);
     expect(res.body.message).toEqual("post unliked");
   });

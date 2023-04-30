@@ -82,8 +82,6 @@ const seedDb = async () => {
     }
   });
 
-  //console.log(testPosts);
-  //console.log(testUsers);
   return { testUsers, testPosts };
 };
 

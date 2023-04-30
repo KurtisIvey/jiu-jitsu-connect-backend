@@ -1,12 +1,8 @@
 const { isLoggedIn } = require("../middleware/isLoggedIn");
 const { body, validationResult } = require("express-validator");
-
 const { check } = require("express-validator");
 const User = require("../models/user.model");
-const multer = require("multer");
-const storage = multer.memoryStorage();
-const { uploadToS3, handleFile } = require("../utilities/s3");
-
+const { handleFile } = require("../utilities/s3");
 const regex = /<>\$\/\|\[\]~`/;
 
 exports.specificUser__get = [
@@ -235,8 +231,8 @@ exports.accountSettings__put = [
         message: "Account settings updated successfully.",
         currentUser,
       });
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
       res.status(500).json({ message: "Internal server error." });
     }
   },

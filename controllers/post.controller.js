@@ -6,22 +6,6 @@ const Comment = require("../models/comment.model");
 const { isLoggedIn } = require("../middleware/isLoggedIn");
 
 const regex = /<>\$\/\|\[\]~`/;
-/*
-// post schema setup 
-author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now,
-  },
-  textContent: {
-    type: String,
-    required: true,
-  },
- */
 
 exports.postsAll__get = [
   isLoggedIn,
@@ -31,7 +15,6 @@ exports.postsAll__get = [
         .sort({ timestamp: -1 })
         .populate("author")
         .exec();
-      //console.log(posts);
       return res.json({ posts });
     } catch (err) {
       console.log(err);
@@ -69,7 +52,7 @@ exports.specificPost__get = async (req, res) => {
       options: {
         sort: { timestamp: -1 },
       },
-    }); //console.log(post);
+    });
     if (post === null) {
       res.status(404).json({ status: "error", error: "post does not exist" });
     } else {
@@ -86,7 +69,6 @@ exports.like__put = [
     const userId = req.user.id;
     try {
       const post = await Post.findById(req.params.id);
-      //console.log(post);
       if (post === null) {
         res.status(404).json({ status: "error", error: "post does not exist" });
       } else {
@@ -140,8 +122,6 @@ exports.postComment__put = [
           comment,
         });
       }
-
-      //console.log(post);
     } catch (err) {
       res.status(400).json({ status: "error", error: err });
     }

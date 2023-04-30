@@ -12,7 +12,6 @@ exports.register__post = [
   async (req, res) => {
     // errors detected via express-validator in the sanitization and escaping prior
     const errors = validationResult(req);
-    //console.log("reach 2");
 
     if (!errors.isEmpty()) {
       res.status(422).json({ errors: errors.mapped() });
@@ -68,11 +67,7 @@ exports.login__post = [
         },
       });
     } catch (err) {
-      //const errors = userErrorHandler(err);
-      //console.log("reach error");
       return res.status(400).json({ status: "error", errors: err });
     }
   },
 ];
-
-// logout handle on client via token removal from local storage.
