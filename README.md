@@ -160,7 +160,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Kurtis Ivey - [@IveyCodingBjj](https://twitter.com/IveyCodingBjj) - kurtiveycodes@gmail.com
 
-Project Link: [https://github.com/KurtisIvey/odin-book-backend](https://github.com/KurtisIvey/odin-book-backend)
+Project Link: [https://odinbook-backend.herokuapp.com/](https://odinbook-backend.herokuapp.com/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
