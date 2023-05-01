@@ -43,7 +43,6 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -58,6 +57,10 @@
 Odin-book-backend is a REST API created to communicate with my Odin-book front end. Odin-book-backend was built using test driven development while constructing the various controllers that encompass it. In addition, mongodb-memory-server is used to mock the mongodb database for testing. This was a very challenging project that pushed my knowledge of backend development and understanding of MongoDB. Image uploading is handled via AWS S3 bucket and the corresponding url is then stored in the MongoDB database.
 
 Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
+
+Fully Deployed Project [Odin-book-ki](https://odin-book-ki.herokuapp.com/)
+
+###### give it about 15-30 seconds after pressing login initially as the backend may be asleep
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -98,8 +101,6 @@ This project is currently setup to only run from my mongodb database and AWS S3 
 ## Usage
 
 This backend was primarily created to mimic many of the features present on Facebook such as registration, login, posting text, commenting text, updating usernames, updating profile photos, and adding/removing friends. If you need a reference for such code examples, you're free to use/borrow/reference any of the code present. Reach out to me if you have any questions.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
