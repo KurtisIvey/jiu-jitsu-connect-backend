@@ -78,14 +78,18 @@ Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
 
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template does rely on any external dependencies or services._
+This project is currently setup to only run from my mongodb database and AWS S3 bucket. You can configure it to run with your own with the proper setup of environment variables. After which, it should be able to run from local host without any issues.
 
-This project is currently setup to only run from my mongodb database and AWS S3 bucket. You can configure it to run with your own with the proper setup of environment variables.
+##### environment variables
+
+- DB_URI
+- SECRET
+- PORT
+- BUCKET
+- AWS_SECRET_ACCESS_KEY
+- AWS_ACCESS_KEY_ID
 
 ## Usage
 
