@@ -18,15 +18,11 @@
 -->
 
 <!-- PROJECT LOGO -->
-<br />
 <div align="center">
-
   <h3 align="center">Odin Book Backend</h3>
-
   <p align="center">
     Odin book REST API 
     <br />
-    
   </p>
 </div>
 
@@ -43,7 +39,6 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -60,7 +55,7 @@
 
 ## About The Project
 
-Odin-book-backend is a REST API created to communicate with my Odin-book front end. Odin-book-backend was built using test driven development while constructing the various controllers that encompass it. In addition, mongodb-memory-server is used to mock the mongodb database for testing. This was a very challenging project that pushed my knowledge of backend development and understanding of mongodb.
+Odin-book-backend is a REST API created to communicate with my Odin-book front end. Odin-book-backend was built using test driven development while constructing the various controllers that encompass it. In addition, mongodb-memory-server is used to mock the mongodb database for testing. This was a very challenging project that pushed my knowledge of backend development and understanding of MongoDB. Image uploading is handled via AWS S3 bucket and the corresponding url is then stored in the MongoDB database.
 
 Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
 
@@ -74,6 +69,7 @@ Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
 - ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
 - ![Heroku](https://img.shields.io/badge/heroku-%23430098.svg?style=for-the-badge&logo=heroku&logoColor=white)
 - ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
+- ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 - ![Postman](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -89,24 +85,13 @@ To get a local copy up and running follow these simple example steps.
 
 _Below is an example of how you can instruct your audience on installing and setting up your app. This template does rely on any external dependencies or services._
 
-This project is currently setup to only run from my mongodb database. You can configure it to run with your own with the proper setup of environment variables.
+This project is currently setup to only run from my mongodb database and AWS S3 bucket. You can configure it to run with your own with the proper setup of environment variables.
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+This backend was primarily created to mimic many of the features present on Facebook such as registration, login, posting text, commenting text, updating usernames, updating profile photos, and adding/removing friends. If you need a reference for such code examples, you're free to use/borrow/reference any of the code present. Reach out to me if you have any questions.
 
 _For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [ ] Add Changelog
-- [ ] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
