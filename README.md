@@ -1,5 +1,3 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-
 <a name="readme-top"></a>
 
 <!--
@@ -33,19 +31,13 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">Odin Book Backend</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Odin book REST API 
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    
   </p>
 </div>
 
@@ -79,9 +71,9 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 Odin-book-backend is a REST API created to communicate with my Odin-book front end. Odin-book-backend was built using test driven development while constructing the various controllers that encompass it. In addition, mongodb-memory-server is used to mock the mongodb database for testing. This was a very challenging project that pushed my knowledge of backend development and understanding of mongodb.
+
+Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -167,8 +159,6 @@ Project Link: [https://odinbook-backend.herokuapp.com/](https://odinbook-backend
 <!-- ACKNOWLEDGMENTS -->
 
 ## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 - [Tailwind](https://tailwindcss.com/)
 - [Heroku](https://devcenter.heroku.com/categories/reference)
