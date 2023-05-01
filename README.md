@@ -82,7 +82,7 @@ Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
 
 This project is currently setup to only run from my mongodb database and AWS S3 bucket. You can configure it to run with your own with the proper setup of environment variables. After which, it should be able to run from local host without any issues.
 
-##### environment variables
+##### environment variables required
 
 - DB_URI
 - SECRET
@@ -90,6 +90,10 @@ This project is currently setup to only run from my mongodb database and AWS S3 
 - BUCKET
 - AWS_SECRET_ACCESS_KEY
 - AWS_ACCESS_KEY_ID
+
+##### cors
+
+- cors settings should be configured to your preferences
 
 ## Usage
 
