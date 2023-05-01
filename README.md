@@ -60,7 +60,7 @@ Client Repo [Odin-book](https://github.com/KurtisIvey/odin-book)
 
 Fully Deployed Project [Odin-book-ki](https://odin-book-ki.herokuapp.com/)
 
-###### give it about 15-30 seconds after pressing login initially as the backend may be asleep
+give it about 15-30 seconds after pressing login initially as the backend may be asleep
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
