@@ -148,6 +148,6 @@ Project Link: [https://odinbook-backend.herokuapp.com/](https://odinbook-backend
 - [Tailwind](https://tailwindcss.com/)
 - [Heroku](https://devcenter.heroku.com/categories/reference)
 - [React Icons](https://react-icons.github.io/react-icons/search)
-- [README template](https://github.com/othneildrew/Best-README-Template)
+- [The repo for this awesome README template courtesy of Othneil Drew](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
