@@ -52,7 +52,7 @@ exports.login__post = [
           _id: user._id,
         },
         process.env.SECRET,
-        { expiresIn: 60 * 60 * 60 }
+        { expiresIn: "365d" }
       );
       return res.json({
         status: "ok",
