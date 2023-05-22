@@ -8,8 +8,8 @@ router.get("/test", (req, res) => {
 });
 
 // Get calendar schedule
-/* router.get("/", calendarController.calendar__get);
-
+router.get("/", calendarController.calendar__get);
+/*
 // Add to calendar schedule
 router.post("/", calendarController.calendar__post);
 
