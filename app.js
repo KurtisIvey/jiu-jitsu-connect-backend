@@ -28,8 +28,9 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 //routes
 const authRouter = require("./routes/auth.router.js");
-const postRouter = require("./routes/post.router");
-const userRouter = require("./routes/user.router");
+const postRouter = require("./routes/post.router.js");
+const userRouter = require("./routes/user.router.js");
+const calendarRouter = require("./routes/calendar.router.js");
 
 app.get("/", (req, res) => {
   res.send("deployed! :D");
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/users", userRouter);
+app.use("/api/calendar", calendarRouter);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
