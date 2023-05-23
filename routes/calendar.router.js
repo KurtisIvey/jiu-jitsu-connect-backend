@@ -9,11 +9,11 @@ router.get("/test", (req, res) => {
 
 // Get calendar schedule
 router.get("/", calendarController.calendar__get);
-/*
+
 // Add to calendar schedule
 router.post("/", calendarController.calendar__post);
 
 // Delete date on calendar schedule
-router.delete("/", calendarController.calendar__delete); */
+router.delete("/", calendarController.calendar__delete);
 
 module.exports = router;

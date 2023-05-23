@@ -29,3 +29,14 @@ describe("should confirm that calendar router is connected", () => {
       .expect(200);
   });
 });
+
+/* 
+describe("should get calendar events from postgres db", () => {
+  test("Get request should receive 3 mock events inserted", () => {
+    const res = request(app)
+      .get("/api/calendar")
+      .set("Accept", "application/json");
+
+    console.log(res.body);
+  });
+}); */
