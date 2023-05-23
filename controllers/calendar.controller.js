@@ -40,7 +40,6 @@ exports.calendar__post = [
       return true;
     }),
   /* isAdmin, */
-
   body("description").trim().blacklist(regex).notEmpty(),
   async (req, res) => {
     // Check if express validator fails
@@ -53,7 +52,7 @@ exports.calendar__post = [
       const { date, time, description } = req.body;
 
       // Insert the calendar event into the database
-
+      // have express validator implemented to prevent direct injection
       const result = await sql`
       INSERT INTO calendar (date_column, time_column, description)
       VALUES (${date}, ${time}, ${description})
