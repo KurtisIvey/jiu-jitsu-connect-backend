@@ -1,5 +1,5 @@
 const postgres = require("postgres");
-const { body, validationResult } = require("express-validator");
+const { body, validationResult, express, check } = require("express-validator");
 
 const { isLoggedIn } = require("../middleware/isLoggedIn");
 require("dotenv").config();
@@ -23,22 +23,45 @@ exports.calendar__get = [
     }
   },
 ];
-
-exports.calendar__post = [
-  body("date")
+exports.calendarRange__post = [
+  body("fromDate")
     .trim()
     .isISO8601()
     .withMessage("Invalid date format. Expected format: YYYY-MM-DD"),
-  body("time")
+  body("toDate")
     .trim()
-    .custom((value) => {
-      // Regular expression to match the "HH:MM:SS" format
-      const timeRegex = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
-      if (!timeRegex.test(value)) {
-        throw new Error("Invalid time format. Expected format: HH:MM:SS");
-      }
-      return true;
-    }),
+    .isISO8601()
+    .withMessage("Invalid date format. Expected format: YYYY-MM-DD"),
+  /*   isLoggedIn,
+   */ async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.mapped() });
+      console.log("error");
+    }
+    try {
+      const fromDate = req.body.fromDate;
+      const toDate = req.body.toDate;
+
+      const query = sql`
+        SELECT * FROM calendar
+        WHERE date_column >= ${fromDate} AND date_column <= ${toDate}
+      `;
+      const items = await query;
+
+      return res.json({ items });
+    } catch (error) {
+      console.error(error);
+      throw new Error("Error retrieving items from the table");
+    }
+  },
+];
+
+exports.calendar__post = [
+  body("fromDate")
+    .trim()
+    .isISO8601()
+    .withMessage("Invalid date format. Expected format: YYYY-MM-DD"),
   /* isAdmin, */
   body("description").trim().blacklist(regex).notEmpty(),
   async (req, res) => {
@@ -49,13 +72,13 @@ exports.calendar__post = [
     }
 
     try {
-      const { date, time, description } = req.body;
+      const { date, description } = req.body;
 
       // Insert the calendar event into the database
       // have express validator implemented to prevent direct injection
       const result = await sql`
-      INSERT INTO calendar (date_column, time_column, description)
-      VALUES (${date}, ${time}, ${description})
+      INSERT INTO calendar (date_column, description)
+      VALUES (${date}, ${description})
       RETURNING id`;
 
       return res.status(200).json({

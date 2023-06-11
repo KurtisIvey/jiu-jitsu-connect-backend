@@ -9,6 +9,7 @@ router.get("/test", (req, res) => {
 
 // Get calendar schedule
 router.get("/", calendarController.calendar__get);
+router.get("/specific-date-range", calendarController.calendarRange__post);
 
 // Add to calendar schedule
 router.post("/", calendarController.calendar__post);
