@@ -16,6 +16,8 @@ app.use(
 
     origin: [
       "http://localhost:5173",
+      "https://jiujitsu-connect.herokuapp.com",
+
       "https://jiujitsu-connect.herokuapp.com/",
     ],
   })
