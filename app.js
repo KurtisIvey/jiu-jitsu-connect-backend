@@ -13,13 +13,9 @@ app.use(
     // absolute requirement, otherwise cors issues will follow
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,DELETE",
+    preflightContinue: false,
 
-    origin: [
-      "http://localhost:5173",
-      "https://jiujitsu-connect.herokuapp.com",
-
-      "https://jiujitsu-connect.herokuapp.com/",
-    ],
+    origin: ["http://localhost:5173", "https://jiujitsu-connect.herokuapp.com"],
   })
 );
 
