@@ -11,7 +11,7 @@ router.get("/", postController.postsAll__get);
 router.get("/:id", postController.specificPost__get);
 router.get("/byUserId/:id", postController.postsByUser__get);
 router.post("/", postController.posts__post);
-router.delete("/", postController.posts__deletePost);
+router.delete("/:id", postController.specificPost__delete);
 router.put("/:id/like", postController.like__put);
 
 router.put("/:id/comment", postController.postComment__put);

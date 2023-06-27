@@ -154,30 +154,19 @@ exports.posts__post = [
   },
 ];
 
-exports.posts__deletePost = async (req, res) => {
+exports.specificPost__delete = async (req, res) => {
   try {
-    const postId = req.params.id;
-    const userId = req.user.id;
+    const post = await Post.findById(req.params.id);
 
-    const post = await Post.findOne({ _id: postId, author: userId });
-
-    if (!post) {
-      return res.status(404).json({
-        status: "error",
-        error: "Post not found or user is not the author",
-      });
-    }
-
-    // Delete the post and comments for it if the _id of the comment is in
-    // the post
     await Comment.deleteMany({ _id: { $in: post.comments } });
-    await post.remove();
+    await Post.deleteOne({ _id: post._id });
 
-    return res.json({
+    return res.status(202).json({
       status: "success",
       message: "Post deleted successfully",
     });
   } catch (err) {
-    res.status(400).json({ status: "error", error: err });
+    //console.error("Error deleting post:", err);
+    return res.status(500).json({ status: "error", error: err });
   }
 };

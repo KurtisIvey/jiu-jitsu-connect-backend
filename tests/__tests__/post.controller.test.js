@@ -1,6 +1,8 @@
 const request = require("supertest");
 const app = require("../appTest");
 const Post = require("../../models/post.model");
+const Comment = require("../../models/comment.model");
+
 const User = require("../../models/user.model");
 
 const seedDb = require("../testUtils/seedDb");
@@ -170,7 +172,6 @@ describe("Like Post", () => {
       .put(`/api/posts/nonexistentpost/like`)
       .set("Authorization", `Bearer ${token}`)
       .set("Accept", "application/json");
-    console.log(res.body.error);
     expect(res.statusCode).toEqual(400);
     expect(res.body.error.value).toEqual("nonexistentpost");
   });
@@ -189,5 +190,51 @@ describe("Like Post", () => {
       .set("Accept", "application/json");
     expect(res.statusCode).toEqual(201);
     expect(res.body.message).toEqual("post unliked");
+  });
+});
+
+describe("Delete Post", () => {
+  test("should return an error if post doesn't exist", async () => {
+    const res = await request(app)
+      .delete(`/api/posts/123`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json");
+    expect(res.statusCode).toEqual(500);
+  });
+  test("should return post deleted successfully if post exists", async () => {
+    // delete post
+    const newPost = await Post.create({
+      author: specificUser._id,
+      postContent: "Test Post",
+    });
+
+    // Create a test comment
+    await request(app)
+      .put(`/api/posts/${newPost._id}/comment`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json")
+      .send({ commentContent: "test comment" });
+
+    const postQuery = await Post.findById(newPost._id);
+    // have to define comment in variable to access in query to confirm at end
+    const comments = postQuery.comments[0];
+    // Delete the post
+    const res = await request(app)
+      .delete(`/api/posts/${newPost._id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json");
+
+    expect(res.statusCode).toEqual(202);
+    expect(res.body).toEqual({
+      status: "success",
+      message: "Post deleted successfully",
+    });
+
+    // Check if the post is deleted from the database
+    const deletedPost = await Post.findById(newPost._id);
+    expect(deletedPost).toBeNull();
+    // Check if the comment is deleted from the database
+    const commentsQuery = await Comment.findById(comments._id);
+    expect(commentsQuery).toBeNull();
   });
 });
