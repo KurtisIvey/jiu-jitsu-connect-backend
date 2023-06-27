@@ -154,19 +154,33 @@ exports.posts__post = [
   },
 ];
 
-exports.specificPost__delete = async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
+exports.specificPost__delete = [
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);
+      console.log("req.user._id:", req.user._id);
+      console.log("post.author:", post.author);
+      console.log(req.user._id.equals(post.author));
+      if (req.user._id.equals(post.author)) {
+        await Comment.deleteMany({ _id: { $in: post.comments } });
+        await Post.deleteOne({ _id: post._id });
 
-    await Comment.deleteMany({ _id: { $in: post.comments } });
-    await Post.deleteOne({ _id: post._id });
-
-    return res.status(202).json({
-      status: "success",
-      message: "Post deleted successfully",
-    });
-  } catch (err) {
-    //console.error("Error deleting post:", err);
-    return res.status(500).json({ status: "error", error: err });
-  }
-};
+        return res.status(202).json({
+          status: "success",
+          message: "Post deleted successfully",
+        });
+      } else {
+        res
+          .status(403)
+          .json({
+            status: "error",
+            message: "permission denied, not the author of the post",
+          });
+      }
+    } catch (err) {
+      //console.error("Error deleting post:", err);
+      return res.status(500).json({ status: "error", error: err });
+    }
+  },
+];

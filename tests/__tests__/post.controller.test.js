@@ -237,4 +237,22 @@ describe("Delete Post", () => {
     const commentsQuery = await Comment.findById(comments._id);
     expect(commentsQuery).toBeNull();
   });
+  test("should fail to delete post due to not being author", async () => {
+    // delete post
+    const newPost = await Post.create({
+      author: nonPostingUser._id,
+      postContent: "Test Post to try to delete",
+    });
+
+    const res = await request(app)
+      .delete(`/api/posts/${newPost._id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json");
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body).toEqual({
+      status: "error",
+      message: "permission denied, not the author of the post",
+    });
+  });
 });
