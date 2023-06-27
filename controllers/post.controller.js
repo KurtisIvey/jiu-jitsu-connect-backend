@@ -69,23 +69,20 @@ exports.like__put = [
     const userId = req.user.id;
     try {
       const post = await Post.findById(req.params.id);
-      if (post === null) {
-        res.status(404).json({ status: "error", error: "post does not exist" });
-      } else {
-        if (post.likes.includes(userId)) {
-          post.likes.pull(userId);
-          await post.save();
-          return res
-            .status(201)
-            .json({ status: "success", message: "post unliked" });
-        }
-        post.likes.push(userId);
+
+      if (post.likes.includes(userId)) {
+        post.likes.pull(userId);
         await post.save();
-        return res.status(201).json({
-          status: "success",
-          message: "post liked",
-        });
+        return res
+          .status(201)
+          .json({ status: "success", message: "post unliked" });
       }
+      post.likes.push(userId);
+      await post.save();
+      return res.status(201).json({
+        status: "success",
+        message: "post liked",
+      });
     } catch (err) {
       res.status(400).json({ status: "error", error: err });
     }
@@ -156,3 +153,31 @@ exports.posts__post = [
     }
   },
 ];
+
+exports.posts__deletePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.user.id;
+
+    const post = await Post.findOne({ _id: postId, author: userId });
+
+    if (!post) {
+      return res.status(404).json({
+        status: "error",
+        error: "Post not found or user is not the author",
+      });
+    }
+
+    // Delete the post and comments for it if the _id of the comment is in
+    // the post
+    await Comment.deleteMany({ _id: { $in: post.comments } });
+    await post.remove();
+
+    return res.json({
+      status: "success",
+      message: "Post deleted successfully",
+    });
+  } catch (err) {
+    res.status(400).json({ status: "error", error: err });
+  }
+};

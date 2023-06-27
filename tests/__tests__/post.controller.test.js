@@ -165,6 +165,15 @@ describe("Comment Post", () => {
 });
 
 describe("Like Post", () => {
+  test("should return an error when liking a non-existent post", async () => {
+    const res = await request(app)
+      .put(`/api/posts/nonexistentpost/like`)
+      .set("Authorization", `Bearer ${token}`)
+      .set("Accept", "application/json");
+    console.log(res.body.error);
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.error.value).toEqual("nonexistentpost");
+  });
   test("should like post ", async () => {
     const res = await request(app)
       .put(`/api/posts/${specificPost._id}/like`)
