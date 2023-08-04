@@ -14,7 +14,7 @@ app.use(
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,DELETE",
 
-    origin: ["http://localhost:5173", "https://jiujitsu-connect.herokuapp.com"],
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://jiujitsu-connect.herokuapp.com"],
   })
 );
 
